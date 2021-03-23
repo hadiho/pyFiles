@@ -442,7 +442,7 @@ def startServer():
 # print(volumeChanges())
 # currency()
 # digital_currency()
-# car()
+car()
 shakhesBource()
 # startShakhes()
 # readCsv()
