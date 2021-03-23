@@ -24,6 +24,9 @@ boursViewUrl = 'http://api.bourseview.com/v2/quotes?filters%20on=close:3500&last
 token = '6e6671c1fcc42c94bf448fe7d880fa88'
 
 
+
+
+
 def populateDatabase(dbname, tbname, table_list, flag):
     dbName = dbname
     tableName = tbname
