@@ -108,7 +108,9 @@ def populateDatabase(dbname, tbname, table_list, flag):
                                      password='Hadi2150008140@$&!',
                                      database=dbName,
                                      port=3306,
-                                     cursorclass=pymysql.cursors.DictCursor)
+                                     cursorclass=pymysql.cursors.DictCursor,
+                                     charset='utf8'
+                                     )
         with connection:
             with connection.cursor() as cursor:
                 sql = "DELETE FROM " + tableName
