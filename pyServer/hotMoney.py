@@ -117,6 +117,7 @@ def populateDatabase(dbname, tbname, table_list, flag):
 
             with connection.cursor() as cursor:
                 sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
+                cursor.execute("SET CHARACTER SET utf8", args=None)
                 cursor.execute(sql, args=None)
             connection.commit()
 
