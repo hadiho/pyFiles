@@ -18,7 +18,6 @@ from datetime import datetime
 from csv import writer
 import pytse_client as tse
 from pytse_client import download_client_types_records
-from pytse_client import tickers_dict, get_ticker_index, all_symbols, download
 
 token = '6e6671c1fcc42c94bf448fe7d880fa88'
 
