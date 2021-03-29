@@ -17,7 +17,7 @@ import schedule
 from datetime import datetime
 from csv import writer
 import pytse_client as tse
-from pytse_client import download_client_types_records
+from pytse_client import download_client_types_records ,all_symbols
 
 token = '6e6671c1fcc42c94bf448fe7d880fa88'
 
@@ -77,9 +77,9 @@ def populateDatabase(dbname, tbname, table_list, flag):
                 val["price"]) + "','" + str(val["minPrice"]) + "','" + str(val["maxPrice"]) + "','" + str(
                 val["time"]) + "')"
         if flag == 7:
-            values = values + "('" + str(val["name"]) + "','" + str(val["sana_usd"]) + "','" + str(
-                val["price_usd"]) + "','" + str(val["price_irr"]) + "','" + str(val["daily_change_usd"]) + \
-                     "','" + str(val["daily_change_irr"]) + "','" + str(val["daily_change_percent"]) + "')"
+            values = values + "('" + str(val["symbol"]) + "','" + str(val["name"]) + "','" + str(
+                val["price"]) + "','" + str(val["change_percent_24h"]) + "','" + str(val["volume_24h"]) + \
+                     "','" + str(val["market_cap"]) + "')"
         if flag == 8:
             values = values + "('" + str(val["model"]) + "','" + str(val["type"]) + "','" + str(
                 val["price"]) + "','" + str(val["market_price"]) + "','" + str(val["last_update"]) + "')"
@@ -677,16 +677,16 @@ def car():
 
 def digital_currency():
     resp = requests.get(
-        'https://sourcearena.ir/api/?token=' + token + '& dcurrency')
+        'https://sourcearena.ir/api/?token=' + token + '&crypto_v2=all')
     print(resp.status_code)
     dataA = json.loads(resp.text)
     print(dataA)
 
     allDCurrency = []
-    for data in dataA:
-        cell = {"name": data["name"], "sana_usd": data["sana_usd"], "price_usd": data["price_usd"],
-                "price_irr": data["price_irr"], "daily_change_usd": data["daily_change_usd"],
-                "daily_change_irr": data["daily_change_irr"], "daily_change_percent": data["daily_change_percent"]}
+    for data in dataA["data"]:
+        cell = {"symbol": data["symbol"], "name": data["name"], "price": data["price"],
+                "change_percent_24h": data["change_percent_24h"], "volume_24h": data["volume_24h"],
+                "market_cap": data["market_cap"]}
         allDCurrency.append(cell)
     populateDatabase('temp', 'digital_currency', allDCurrency, 7)
 
@@ -759,7 +759,7 @@ def downloadCsvs():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False)
         df = df.sort_values(by='date', ascending=True)
         df.to_csv('client_types_data/' + symbol + '.csv', index=False)
-
+        print(symbol)
     print("finish download csv")
 
 
@@ -778,12 +778,12 @@ def downloadCsvs():
 #     time.sleep(5)
 
 
-downloadCsvs()
+# downloadCsvs()
 # detectVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
-# digital_currency()
+digital_currency()
 # car()
 # shakhesBource()
 # startShakhes()
