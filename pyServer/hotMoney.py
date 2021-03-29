@@ -778,12 +778,12 @@ def downloadCsvs():
 #     time.sleep(5)
 
 
-# downloadCsvs()
+downloadCsvs()
 # detectVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
-digital_currency()
+# digital_currency()
 # car()
 # shakhesBource()
 # startShakhes()
