@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import heapq
 import array
+import time
 from operator import itemgetter
 import datetime
 import os.path
@@ -97,12 +98,12 @@ def populateDatabase(dbname, tbname, table_list, flag):
                 val["NUMBER"]) \
                      + "','" + str(val["ATTRIBUTE"]) + "','" + str(val["TYPE"]) + "')"
 
-        print(values)
+        # print(values)
 
     if len(table_list) > 0:
-        connection = pymysql.connect(host='localhost',#194.5.175.58
+        connection = pymysql.connect(host='194.5.175.58',# 194.5.175.58   localhost
                                      user='root',
-                                     password='root',#Hadi2150008140@$&!
+                                     password='Hadi2150008140@$&!',# Hadi2150008140@$&!   root
                                      database=dbName,
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
@@ -181,9 +182,11 @@ def readCsv(json):
                     json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
                     json['trade_number'], json['final_price'], datetime.now().strftime('%Y-%m-%d')]
 
-    if (json['real_buy_count'] is not None and json['real_buy_count'] != 0) and (json['real_sell_count'] is not None and json['real_sell_count'] != 0) :
-        print(json['real_buy_value'])
-        print(json['real_buy_count'])
+    if (json['real_buy_count'] is not None and json['real_buy_count'] != "0") and (json['real_sell_count'] is not None and json['real_sell_count'] != "0"):
+        # print(json['real_buy_value'])
+        # print(json['real_buy_count'])
+        # print(json['real_sell_value'])
+        # print(json['real_sell_count'])
         real_buy_mean_price = int(json['real_buy_value'] / int(json['real_buy_count']))
         real_sell_mean_price = int(json['real_sell_value'] / int(json['real_sell_count']))
         if int(json['co_buy_count']) > 0:
@@ -205,8 +208,9 @@ def readCsv(json):
                               real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
 
         if os.path.isfile(fileNameTicker):
-            df = pd.read_csv(fileNameTicker, index_col=False)
             print(fileNameTicker)
+            df = pd.read_csv(fileNameTicker, index_col=False, low_memory=False)
+
 
             now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
             past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
@@ -288,8 +292,9 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-        readCsv(dataA[idx])
-        # if dataA[idx]['name'] == 'بپاس':
+        # if dataA[idx]['name'] == 'یاقوت':
+            readCsv(dataA[idx])
+
 
 
 def detectVolume():
@@ -757,9 +762,10 @@ def startServer():
     print("I'm working...")
     rt = RepeatedTimer(30, shakhesBource)
     rt = RepeatedTimer(1000, car)
-    rt = RepeatedTimer(500, currency)
-    rt = RepeatedTimer(600, digital_currency)
-    rt = RepeatedTimer(1800, dateVolume)
+    rt = RepeatedTimer(800, currency)
+    rt = RepeatedTimer(700, digital_currency)
+    rt = RepeatedTimer(30, detectVolume)
+    rt = RepeatedTimer(1080, dateVolume)
     try:
         sleep(14400)
     finally:
@@ -772,7 +778,7 @@ def startServer():
 
 
 def downloadCsvs():
-    print("downloadCsvs")
+    print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for symbol in all_symbols():
@@ -786,19 +792,22 @@ def downloadCsvs():
 
 
 
-# schedule.every().saturday.at("14:53").do(startServer)
-# schedule.every().sunday.at("08:55").do(startServer)
-# schedule.every().monday.at("08:55").do(startServer)
-# schedule.every().tuesday.at("08:55").do(startServer)
-# schedule.every().wednesday.at("08:55").do(startServer)
-# schedule.every().at("16:00").do(downloadCsvs)
+schedule.every().saturday.at("08:55").do(startServer)
+schedule.every().sunday.at("08:55").do(startServer)
+schedule.every().monday.at("08:55").do(startServer)
+schedule.every().tuesday.at("08:55").do(startServer)
+schedule.every().wednesday.at("08:55").do(startServer)
+schedule.every().at("16:00").do(downloadCsvs)
 
-# while True:
-#     schedule.run_pending()
-#     time.sleep(5)
+while True:
+    schedule.run_pending()
+    time.sleep(5)
+
+
+
 
 # startServer()
-downloadCsvs()
+# downloadCsvs()
 # detectVolume()
 # all_stocks()
 # print(volumeChanges())
