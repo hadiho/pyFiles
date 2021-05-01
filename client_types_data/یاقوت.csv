@@ -1,0 +1,3 @@
+date,individual_buy_count,corporate_buy_count,individual_sell_count,corporate_sell_count,individual_buy_vol,corporate_buy_vol,individual_sell_vol,corporate_sell_vol,individual_buy_value,corporate_buy_value,individual_sell_value,corporate_sell_value,individual_buy_mean_price,individual_sell_mean_price,corporate_buy_mean_price,corporate_sell_mean_price,individual_ownership_change,jdate
+2021-04-30,129,2,107,1,1378543,530447,1762752,146238,16973999959,6531393911,21704765376,1800628494,131581395,202848274,3265696955,1800628494,146238,
+2021-05-01,129,1,161,1,3736231,40700,2520198,1256733,46127507926,502482200,31114364508,15515625618,357577580,193256922,502482200,15515625618,1256733,
