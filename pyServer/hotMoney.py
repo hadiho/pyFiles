@@ -791,13 +791,12 @@ def downloadCsvs():
 
 
 
-
 schedule.every().saturday.at("08:55").do(startServer)
 schedule.every().sunday.at("08:55").do(startServer)
 schedule.every().monday.at("08:55").do(startServer)
 schedule.every().tuesday.at("08:55").do(startServer)
 schedule.every().wednesday.at("08:55").do(startServer)
-schedule.every().at("16:00").do(downloadCsvs)
+schedule.every().day.at("16:00").do(downloadCsvs)
 
 while True:
     schedule.run_pending()
