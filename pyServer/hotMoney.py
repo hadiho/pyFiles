@@ -9,6 +9,7 @@ import pandas as pd
 import numpy as np
 import heapq
 import array
+import logging
 import time
 from operator import itemgetter
 import datetime
@@ -121,10 +122,14 @@ def populateDatabase(dbname, tbname, table_list, flag):
             connection.commit()
 
 
+def is_non_zero_file(fpath):
+    return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
+
+
 def lastChanges():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&all&type=0')  # 6e6671c1fcc42c94bf448fe7d880fa88&all&type=0')
-    print(resp.status_code)
+    print("lastChanges ", resp.status_code)
     if resp.status_code == 200:
         data = json.loads(resp.text)
         return data
@@ -139,28 +144,34 @@ def hotMoney(dataA):
     if saveData is None:
         saveData = dataA
 
-    hotMoneyList = []
-    for idx, val in enumerate(dataA):
-        value = dataA[idx]['real_buy_value'] - saveData[idx]['real_buy_value']
-        if value > 2000000000:
-            count = dataA['real_buy_count'] - saveData[idx]['real_buy_count']
-            average = value / count
-            cell = {"time": dataA[idx]['TIME'], "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
-                    "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                    "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
-            hotMoneyList.append(cell)
+    try:
+        hotMoneyList = []
+        for idx, val in enumerate(dataA):
+            value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
+            if value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and dataA[idx]['real_buy_count'] != "0":
+                print(value)
+                print(dataA[idx]['real_buy_count'])
+                print(saveData[idx]['real_buy_count'])
+                count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
+                average = value / count
+                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
+                        "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                        "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
+                hotMoneyList.append(cell)
 
-        value = dataA[idx]['real_sell_value'] - saveData[idx]['real_sell_value']
-        if value > 2000000000:
-            count = dataA['real_sell_count'] - saveData[idx]['real_sell_count']
-            average = value / count
-            cell = {"time": dataA[idx]['TIME'], "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
-                    "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                    "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
-            hotMoneyList.append(cell)
+            value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
+            if value > 2000000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
+                count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
+                average = value / count
+                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
+                        "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                        "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
+                hotMoneyList.append(cell)
 
-    saveData = dataA
-    populateDatabase("price", "hot_money", hotMoneyList, 10)
+        saveData = dataA
+        populateDatabase("price", "hot_money", hotMoneyList, 10)
+    except:
+        logging.exception("Error")
 
 
 def appendNewLineToCsv(file_name, list_of_elem, isUpdate):
@@ -175,119 +186,118 @@ def appendNewLineToCsv(file_name, list_of_elem, isUpdate):
 
 
 def readCsv(json):
-    fileNameTicker = 'tickers_data/' + json['name'] + '.csv'
-    fileNameVolume = 'client_types_data/' + json['name'] + '.csv'
+    try:
+        fileNameTicker = 'tickers_data/' + json['name'] + '.csv'
+        fileNameVolume = 'client_types_data/' + json['name'] + '.csv'
 
-    row_contents = [datetime.now().strftime('%Y-%m-%d'), json['yesterday_price'], json['highest_price'],
-                    json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
-                    json['trade_number'], json['final_price'], datetime.now().strftime('%Y-%m-%d')]
+        row_contents = [datetime.now().strftime('%Y-%m-%d'), json['yesterday_price'], json['highest_price'],
+                        json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
+                        json['trade_number'], json['final_price'], datetime.now().strftime('%Y-%m-%d')]
 
-    if (json['real_buy_count'] is not None and json['real_buy_count'] != "0") and (json['real_sell_count'] is not None and json['real_sell_count'] != "0"):
-        # print(json['real_buy_value'])
-        # print(json['real_buy_count'])
-        # print(json['real_sell_value'])
-        # print(json['real_sell_count'])
-        real_buy_mean_price = int(json['real_buy_value'] / int(json['real_buy_count']))
-        real_sell_mean_price = int(json['real_sell_value'] / int(json['real_sell_count']))
-        if int(json['co_buy_count']) > 0:
-            co_buy_mean_price = int(json['co_buy_value'] / int(json['co_buy_count']))
-        else:
-            co_buy_mean_price = 0
+        if (json['real_buy_count'] is not None and json['real_buy_count'] != "0") and (json['real_sell_count'] is not None and json['real_sell_count'] != "0"):
+            real_buy_mean_price = int(json['real_buy_value'] / int(json['real_buy_count']))
+            real_sell_mean_price = int(json['real_sell_value'] / int(json['real_sell_count']))
+            if int(json['co_buy_count']) > 0:
+                co_buy_mean_price = int(json['co_buy_value'] / int(json['co_buy_count']))
+            else:
+                co_buy_mean_price = 0
 
-        if int(json['co_sell_count']) > 0:
-            co_sell_mean_price = int(json['co_sell_value'] / int(json['co_sell_count']))
-        else:
-            co_sell_mean_price = 0
+            if int(json['co_sell_count']) > 0:
+                co_sell_mean_price = int(json['co_sell_value'] / int(json['co_sell_count']))
+            else:
+                co_sell_mean_price = 0
 
-        row_contentsVolume = [datetime.now().strftime('%Y-%m-%d'), json['real_buy_count'], json['co_buy_count'],
-                              json['real_sell_count'], json['co_sell_count'], json['real_buy_volume'],
-                              json['co_buy_volume'],
-                              json['real_sell_volume'], json['co_sell_volume'], json['real_buy_value'],
-                              json['co_buy_value'],
-                              json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'], real_buy_mean_price,
-                              real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
+            row_contentsVolume = [datetime.now().strftime('%Y-%m-%d'), json['real_buy_count'], json['co_buy_count'],
+                                  json['real_sell_count'], json['co_sell_count'], json['real_buy_volume'],
+                                  json['co_buy_volume'],
+                                  json['real_sell_volume'], json['co_sell_volume'], json['real_buy_value'],
+                                  json['co_buy_value'],
+                                  json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'], real_buy_mean_price,
+                                  real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
 
-        if os.path.isfile(fileNameTicker):
-            print(fileNameTicker)
-            df = pd.read_csv(fileNameTicker, index_col=False, low_memory=False)
+            if os.path.isfile(fileNameTicker) and is_non_zero_file(fileNameTicker):
+                # print(fileNameTicker)
+                df = pd.read_csv(fileNameTicker, index_col=False, low_memory=False)
 
+                now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+                past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
 
-            now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-            past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
+                if now > past:
+                    # print("create ticker row")
+                    appendNewLineToCsv(fileNameTicker, row_contents, True)
+                elif now == past:
+                    # if len(df) == 1:
+                    #     columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
+                    #     appendNewLineToCsv(fileNameTicker, columns, True)
+                    # else:
+                    df.iloc[-1, df.columns.get_loc('date')] = row_contents[0]
+                    df.iloc[-1, df.columns.get_loc('open')] = row_contents[1]
+                    df.iloc[-1, df.columns.get_loc('high')] = row_contents[2]
+                    df.iloc[-1, df.columns.get_loc('low')] = row_contents[3]
+                    df.iloc[-1, df.columns.get_loc('adjClose')] = row_contents[4]
+                    df.iloc[-1, df.columns.get_loc('value')] = row_contents[5]
+                    df.iloc[-1, df.columns.get_loc('volume')] = row_contents[6]
+                    df.iloc[-1, df.columns.get_loc('count')] = row_contents[7]
+                    df.iloc[-1, df.columns.get_loc('close')] = row_contents[8]
+                    df.iloc[-1, df.columns.get_loc('jdate')] = row_contents[9]
 
-            if now > past:
-                print("create ticker row")
+                    # df.drop(df.tail(-1).index, inplace=True)
+                    # appendNewLineToCsv(fileNameTicker, row_contents, True)
+                    df.to_csv(fileNameTicker, index=False)
+                    # print("update ticker row")
+            else:
+                columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
+                appendNewLineToCsv(fileNameTicker, columns, True)
                 appendNewLineToCsv(fileNameTicker, row_contents, True)
-            elif now == past:
-                # if len(df) == 1:
-                #     columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
-                #     appendNewLineToCsv(fileNameTicker, columns, True)
-                # else:
-                df.iloc[-1, df.columns.get_loc('date')] = row_contents[0]
-                df.iloc[-1, df.columns.get_loc('open')] = row_contents[1]
-                df.iloc[-1, df.columns.get_loc('high')] = row_contents[2]
-                df.iloc[-1, df.columns.get_loc('low')] = row_contents[3]
-                df.iloc[-1, df.columns.get_loc('adjClose')] = row_contents[4]
-                df.iloc[-1, df.columns.get_loc('value')] = row_contents[5]
-                df.iloc[-1, df.columns.get_loc('volume')] = row_contents[6]
-                df.iloc[-1, df.columns.get_loc('count')] = row_contents[7]
-                df.iloc[-1, df.columns.get_loc('close')] = row_contents[8]
-                df.iloc[-1, df.columns.get_loc('jdate')] = row_contents[9]
+                # print("exist create ticker row")
 
-                # df.drop(df.tail(-1).index, inplace=True)
-                # appendNewLineToCsv(fileNameTicker, row_contents, True)
-                df.to_csv(fileNameTicker, index=False)
-                print("update ticker row")
-        else:
-            columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
-            appendNewLineToCsv(fileNameTicker, columns, True)
-            appendNewLineToCsv(fileNameTicker, row_contents, True)
-            print("exist create ticker row")
+            if os.path.isfile(fileNameVolume) and is_non_zero_file(fileNameVolume):
+                # print(fileNameVolume)
+                df = pd.read_csv(fileNameVolume, index_col=False)
 
-        if os.path.isfile(fileNameVolume):
-            df = pd.read_csv(fileNameVolume, index_col=False)
+                now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+                past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
 
-            now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-            past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
+                if now > past:
+                    # print("create volume row")
+                    appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
 
-            if now > past:
-                print("create volume row")
+                    # df = df.sort_values(by='date', ascending=True)
+
+                elif now == past:
+                    df.iloc[-1, df.columns.get_loc('date')] = row_contentsVolume[0]
+                    df.iloc[-1, df.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
+                    df.iloc[-1, df.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
+                    df.iloc[-1, df.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
+                    df.iloc[-1, df.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
+                    df.iloc[-1, df.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
+                    df.iloc[-1, df.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
+                    df.iloc[-1, df.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
+                    df.iloc[-1, df.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
+                    df.iloc[-1, df.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
+                    df.iloc[-1, df.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
+                    df.iloc[-1, df.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
+                    df.iloc[-1, df.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
+                    df.iloc[-1, df.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
+                    df.iloc[-1, df.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
+                    df.iloc[-1, df.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
+                    df.iloc[-1, df.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
+                    df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
+
+                    df.to_csv(fileNameVolume, index=False)
+                    # print("update volume row")
+            else:
+                columns = ['date', 'individual_buy_count', 'corporate_buy_count', 'individual_sell_count',
+                           'corporate_sell_count',
+                           'individual_buy_vol', 'corporate_buy_vol', 'individual_sell_vol',
+                           'corporate_sell_vol', 'individual_buy_value', 'corporate_buy_value', 'individual_sell_value',
+                           'corporate_sell_value', 'individual_buy_mean_price', 'individual_sell_mean_price',
+                           'corporate_buy_mean_price', 'corporate_sell_mean_price', 'individual_ownership_change', 'jdate']
+                appendNewLineToCsv(fileNameVolume, columns, True)
                 appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
-
-                # df = df.sort_values(by='date', ascending=True)
-
-            elif now == past:
-                df.iloc[-1, df.columns.get_loc('date')] = row_contentsVolume[0]
-                df.iloc[-1, df.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
-                df.iloc[-1, df.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
-                df.iloc[-1, df.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
-                df.iloc[-1, df.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
-                df.iloc[-1, df.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
-                df.iloc[-1, df.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
-                df.iloc[-1, df.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
-                df.iloc[-1, df.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
-                df.iloc[-1, df.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
-                df.iloc[-1, df.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
-                df.iloc[-1, df.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
-                df.iloc[-1, df.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
-                df.iloc[-1, df.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
-                df.iloc[-1, df.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
-                df.iloc[-1, df.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
-                df.iloc[-1, df.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
-                df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
-
-                df.to_csv(fileNameVolume, index=False)
-                print("update volume row")
-        else:
-            columns = ['date', 'individual_buy_count', 'corporate_buy_count', 'individual_sell_count',
-                       'corporate_sell_count',
-                       'individual_buy_vol', 'corporate_buy_vol', 'individual_sell_vol',
-                       'corporate_sell_vol', 'individual_buy_value', 'corporate_buy_value', 'individual_sell_value',
-                       'corporate_sell_value', 'individual_buy_mean_price', 'individual_sell_mean_price',
-                       'corporate_buy_mean_price', 'corporate_sell_mean_price', 'individual_ownership_change', 'jdate']
-            appendNewLineToCsv(fileNameVolume, columns, True)
-            appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
-            print("exist create volume row")
+                # print("exist create volume row")
+    except:
+        logging.exception("Error")
 
 
 def historyVolume(dataA):
@@ -658,10 +668,10 @@ def pushPossibleQueueSell():
 def currency():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '& currency')
-    print(resp.status_code)
+    print("currency ", resp.status_code)
     dataA = json.loads(resp.text)
     if resp.status_code == 200:
-        print(dataA)
+        # print(dataA)
 
         allCurrency = []
         for data in dataA['data']:
@@ -674,10 +684,10 @@ def currency():
 def car():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&car=all')
-    print(resp.status_code)
+    print("car ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-        print(dataA)
+        # print(dataA)
 
         carList = []
         for data in dataA:
@@ -690,10 +700,10 @@ def car():
 def digital_currency():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&crypto_v2=all')
-    print(resp.status_code)
+    print("digital_currency ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-        print(dataA)
+        # print(dataA)
 
         allDCurrency = []
         for data in dataA["data"]:
@@ -707,10 +717,9 @@ def digital_currency():
 def shakhesBource():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '& market=market_bourse')
-    print(resp.status_code)
+    print("shakhesBource ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-
         shakhesBource = []
         cell = {"state": dataA["bourse"]["state"], "b_index": dataA["bourse"]["index"],
                 "index_change": dataA["bourse"]["index_change"],
@@ -759,23 +768,25 @@ def startShakhes():
 
 
 def startServer():
-    print("I'm working...")
-    rt = RepeatedTimer(30, shakhesBource)
-    rt = RepeatedTimer(1000, car)
-    rt = RepeatedTimer(800, currency)
-    rt = RepeatedTimer(700, digital_currency)
-    rt = RepeatedTimer(30, detectVolume)
-    rt = RepeatedTimer(1080, dateVolume)
     try:
-        sleep(14400)
-    finally:
-        rt.stop()
-    # startShakhes()
-    # startDetectVolume()
-    # startDateVolume()
-    # car()
-    # currency()
-
+        print("I'm working...")
+        rt = RepeatedTimer(10, shakhesBource)
+        rt = RepeatedTimer(1000, car)
+        rt = RepeatedTimer(800, currency)
+        rt = RepeatedTimer(700, digital_currency)
+        rt = RepeatedTimer(30, detectVolume)
+        rt = RepeatedTimer(1080, dateVolume)
+        try:
+            sleep(14400)
+        finally:
+            rt.stop()
+        # startShakhes()
+        # startDetectVolume()
+        # startDateVolume()
+        # car()
+        # currency()
+    except ZeroDivisionError:
+        logging.exception("message")
 
 def downloadCsvs():
     print("to download Csv ...")
@@ -788,6 +799,19 @@ def downloadCsvs():
         print(symbol)
     print("finish download csv")
 
+
+logging.basicConfig(filename="log.txt",
+                             filemode='a',
+                            format='%(levelname)s: %(message)s',
+                            datefmt='%H:%M:%S',
+                            level=logging.ERROR)
+# logging.debug('debug')
+# logging.info('info')
+# logging.warning('warning')
+# logging.error('error')
+# logging.critical('critical')
+# logging.exception('exception')
+logger = logging.getLogger('urbanGUI')
 
 
 
