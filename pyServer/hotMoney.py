@@ -819,7 +819,7 @@ logging.basicConfig(filename="log.txt",
 # logging.exception('exception')
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().saturday.at("08:55").do(startServer)
+schedule.every().saturday.at("17:20").do(startServer)
 schedule.every().sunday.at("08:55").do(startServer)
 schedule.every().monday.at("08:55").do(startServer)
 schedule.every().tuesday.at("08:55").do(startServer)
