@@ -1,7 +1,7 @@
 # coding=utf8
 import requests
 import json
-import pymysql.cursors
+import pymysql
 import threading
 from time import sleep
 from threading import Timer
@@ -19,7 +19,7 @@ import schedule
 from datetime import datetime
 from csv import writer
 import pytse_client as tse
-from pytse_client import download_client_types_records ,all_symbols
+from pytse_client import download_client_types_records, all_symbols
 
 token = '6e6671c1fcc42c94bf448fe7d880fa88'
 
@@ -102,9 +102,9 @@ def populateDatabase(dbname, tbname, table_list, flag):
         # print(values)
 
     if len(table_list) > 0:
-        connection = pymysql.connect(host='194.5.175.58',# 194.5.175.58   localhost
+        connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                      user='root',
-                                     password='Hadi2150008140@$&!',# Hadi2150008140@$&!   root
+                                     password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
                                      database=dbName,
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
@@ -154,7 +154,8 @@ def hotMoney(dataA):
                 print(saveData[idx]['real_buy_count'])
                 count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
                 average = value / count
-                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
+                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'],
+                        "full_name": dataA[idx]['full_name'],
                         "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
                         "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
                 hotMoneyList.append(cell)
@@ -163,7 +164,8 @@ def hotMoney(dataA):
             if value > 2000000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
                 count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
                 average = value / count
-                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'], "full_name": dataA[idx]['full_name'],
+                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'],
+                        "full_name": dataA[idx]['full_name'],
                         "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
                         "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
                 hotMoneyList.append(cell)
@@ -194,7 +196,8 @@ def readCsv(json):
                         json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
                         json['trade_number'], json['final_price'], datetime.now().strftime('%Y-%m-%d')]
 
-        if (json['real_buy_count'] is not None and json['real_buy_count'] != "0") and (json['real_sell_count'] is not None and json['real_sell_count'] != "0"):
+        if (json['real_buy_count'] is not None and json['real_buy_count'] != "0") and (
+                json['real_sell_count'] is not None and json['real_sell_count'] != "0"):
             real_buy_mean_price = int(json['real_buy_value'] / int(json['real_buy_count']))
             real_sell_mean_price = int(json['real_sell_value'] / int(json['real_sell_count']))
             if int(json['co_buy_count']) > 0:
@@ -212,7 +215,8 @@ def readCsv(json):
                                   json['co_buy_volume'],
                                   json['real_sell_volume'], json['co_sell_volume'], json['real_buy_value'],
                                   json['co_buy_value'],
-                                  json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'], real_buy_mean_price,
+                                  json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'],
+                                  real_buy_mean_price,
                                   real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
 
             if os.path.isfile(fileNameTicker) and is_non_zero_file(fileNameTicker):
@@ -282,7 +286,8 @@ def readCsv(json):
                     df.iloc[-1, df.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
                     df.iloc[-1, df.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
                     df.iloc[-1, df.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
-                    df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
+                    df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[
+                        13]  # co_sell_volume
 
                     df.to_csv(fileNameVolume, index=False)
                     # print("update volume row")
@@ -292,7 +297,8 @@ def readCsv(json):
                            'individual_buy_vol', 'corporate_buy_vol', 'individual_sell_vol',
                            'corporate_sell_vol', 'individual_buy_value', 'corporate_buy_value', 'individual_sell_value',
                            'corporate_sell_value', 'individual_buy_mean_price', 'individual_sell_mean_price',
-                           'corporate_buy_mean_price', 'corporate_sell_mean_price', 'individual_ownership_change', 'jdate']
+                           'corporate_buy_mean_price', 'corporate_sell_mean_price', 'individual_ownership_change',
+                           'jdate']
                 appendNewLineToCsv(fileNameVolume, columns, True)
                 appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
                 # print("exist create volume row")
@@ -303,8 +309,7 @@ def readCsv(json):
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
         # if dataA[idx]['name'] == 'یاقوت':
-            readCsv(dataA[idx])
-
+        readCsv(dataA[idx])
 
 
 def detectVolume():
@@ -788,6 +793,7 @@ def startServer():
     except ZeroDivisionError:
         logging.exception("message")
 
+
 def downloadCsvs():
     print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
@@ -801,10 +807,10 @@ def downloadCsvs():
 
 
 logging.basicConfig(filename="log.txt",
-                             filemode='a',
-                            format='%(levelname)s: %(message)s',
-                            datefmt='%H:%M:%S',
-                            level=logging.ERROR)
+                    filemode='a',
+                    format='%(levelname)s: %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.ERROR)
 # logging.debug('debug')
 # logging.info('info')
 # logging.warning('warning')
@@ -813,21 +819,16 @@ logging.basicConfig(filename="log.txt",
 # logging.exception('exception')
 logger = logging.getLogger('urbanGUI')
 
-
-
 schedule.every().saturday.at("08:55").do(startServer)
 schedule.every().sunday.at("08:55").do(startServer)
 schedule.every().monday.at("08:55").do(startServer)
 schedule.every().tuesday.at("08:55").do(startServer)
 schedule.every().wednesday.at("08:55").do(startServer)
-schedule.every().day.at("15:52").do(downloadCsvs)
+schedule.every().day.at("15:57").do(downloadCsvs)
 
 while True:
     schedule.run_pending()
     time.sleep(5)
-
-
-
 
 # startServer()
 # downloadCsvs()
