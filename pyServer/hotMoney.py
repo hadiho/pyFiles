@@ -821,10 +821,10 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("08:55").do(startServer)
 schedule.every().sunday.at("08:55").do(startServer)
-schedule.every().monday.at("17:41").do(startServer)
+schedule.every().monday.at("08:55").do(startServer)
 schedule.every().tuesday.at("08:55").do(startServer)
 schedule.every().wednesday.at("08:55").do(startServer)
-schedule.every().day.at("16:30").do(downloadCsvs)
+schedule.every().day.at("18:00").do(downloadCsvs)
 
 while True:
     schedule.run_pending()
