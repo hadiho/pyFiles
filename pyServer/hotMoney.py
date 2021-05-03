@@ -10,12 +10,12 @@ import numpy as np
 import heapq
 import array
 import logging
-import time
 from operator import itemgetter
 import datetime
 import os.path
 from RepeatedTimer import RepeatedTimer
 import schedule
+import time
 from datetime import datetime
 from csv import writer
 import pytse_client as tse
@@ -819,18 +819,18 @@ logging.basicConfig(filename="log.txt",
 # logging.exception('exception')
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().saturday.at("08:55").do(startServer)
-# schedule.every().sunday.at("08:55").do(startServer)
-# schedule.every().monday.at("17:25").do(startServer)
-# schedule.every().tuesday.at("08:55").do(startServer)
-# schedule.every().wednesday.at("08:55").do(startServer)
-# schedule.every().day.at("16:30").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(5)
+schedule.every().saturday.at("08:55").do(startServer)
+schedule.every().sunday.at("08:55").do(startServer)
+schedule.every().monday.at("17:41").do(startServer)
+schedule.every().tuesday.at("08:55").do(startServer)
+schedule.every().wednesday.at("08:55").do(startServer)
+schedule.every().day.at("16:30").do(downloadCsvs)
 
-startServer()
+while True:
+    schedule.run_pending()
+    time.sleep(5)
+
+# startServer()
 # downloadCsvs()
 # detectVolume()
 # all_stocks()
