@@ -127,12 +127,16 @@ def is_non_zero_file(fpath):
 
 
 def lastChanges():
-    resp = requests.get(
-        'https://sourcearena.ir/api/?token=' + token + '&all&type=0')  # 6e6671c1fcc42c94bf448fe7d880fa88&all&type=0')
-    print("lastChanges ", resp.status_code)
-    if resp.status_code == 200:
-        data = json.loads(resp.text)
-        return data
+    try:
+        resp = requests.get(
+            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')  # 6e6671c1fcc42c94bf448fe7d880fa88&all&type=0')
+        print("lastChanges ", resp.status_code)
+        if resp.status_code == 200:
+            data = json.loads(resp.text)
+            return data
+    except:
+        logging.exception("Error")
+
     return None
 
 
@@ -824,7 +828,7 @@ schedule.every().sunday.at("09:00").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("09:00").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("09:00").do(downloadCsvs)
+schedule.every().day.at("16:00").do(downloadCsvs)
 
 while True:
     schedule.run_pending()
