@@ -42,7 +42,7 @@ io.on('connection',function(socket){
 
 
 server.listen(8000,function(){
-    console.log("Listening on 8000");
+    console.log("Listening on port 8000");
 });
 
 
@@ -61,48 +61,48 @@ const program = async () => {
 
   await instance.start();
 
-  instance.addTrigger({
-    name: 'TEST',
-    expression: '*',
-    statement: MySQLEvents.STATEMENTS.ALL,
-    onEvent: (event) => { // You will receive the events here
-      
-     
-      if (event.table == 'hot_money'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_hot_money",event.affectedRows)
-        
-      }
-
-      if (event.table == 'last_price'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_detail", event.affectedRows)
-        
-      }
-
-      if (event.table == 'main_index'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_main_index",event.affectedRows)
-
-      }
-
-      if (event.table == 'currency'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_table1",event.affectedRows)
-
-      }
-
-
-    },
-  });
+  // instance.addTrigger({
+  //   name: 'TEST',
+  //   expression: '*',
+  //   statement: MySQLEvents.STATEMENTS.ALL,
+  //   onEvent: (event) => { // You will receive the events here
+  //
+  //
+  //     if (event.table == 'hot_money'){
+  //       console.log(event);
+  //       console.log(event.affectedRows);
+  //
+  //       emitAnEvent("update_hot_money",event.affectedRows)
+  //
+  //     }
+  //
+  //     if (event.table == 'last_price'){
+  //       console.log(event);
+  //       console.log(event.affectedRows);
+  //
+  //       emitAnEvent("update_detail", event.affectedRows)
+  //
+  //     }
+  //
+  //     if (event.table == 'main_index'){
+  //       console.log(event);
+  //       console.log(event.affectedRows);
+  //
+  //       emitAnEvent("update_main_index",event.affectedRows)
+  //
+  //     }
+  //
+  //     if (event.table == 'currency'){
+  //       console.log(event);
+  //       console.log(event.affectedRows);
+  //
+  //       emitAnEvent("update_table1",event.affectedRows)
+  //
+  //     }
+  //
+  //
+  //   },
+  // });
   
   instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
   instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
