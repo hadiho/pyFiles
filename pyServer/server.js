@@ -10,7 +10,7 @@ var server = require('http').Server(app);
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://localhost:8000',
+    origin: 'http://194.5.175.58:8000',
     credentials: true
   }
 });
@@ -49,7 +49,7 @@ server.listen(8000,function(){
 console.log(MySQLEvents.STATEMENTS);
 const program = async () => {
   const connection = mysql.createConnection({
-    host: 'localhost',
+    host: '194.5.175.58',
     user: 'root',
     password: 'Hadi2150008140@$&!',
   });
@@ -66,26 +66,26 @@ const program = async () => {
 
   instance.addTrigger({
     name: 'update main index',
-    expression: 'temp.main_index',
-    statement: MySQLEvents.STATEMENTS.UPDATE,
+    expression: '*',
+    statement: MySQLEvents.STATEMENTS.ALL,
     onEvent: async (event) => {
 
 
-      // if (event.table == 'hot_money'){
-      //   console.log(event);
-      //   console.log(event.affectedRows);
-      //
-      //   emitAnEvent("update_hot_money",event.affectedRows)
-      //
-      // }
-      //
-      // if (event.table == 'last_price'){
-      //   console.log(event);
-      //   console.log(event.affectedRows);
-      //
-      //   emitAnEvent("update_detail", event.affectedRows)
-      //
-      // }
+      if (event.table == 'hot_money'){
+        console.log(event);
+        console.log(event.affectedRows);
+
+        emitAnEvent("update_hot_money",event.affectedRows)
+
+      }
+
+      if (event.table == 'last_price'){
+        console.log(event);
+        console.log(event.affectedRows);
+
+        emitAnEvent("update_detail", event.affectedRows)
+
+      }
 
       if (event.table == 'main_index'){
         console.log(event);
@@ -95,13 +95,13 @@ const program = async () => {
 
       }
 
-      // if (event.table == 'currency'){
-      //   console.log(event);
-      //   console.log(event.affectedRows);
-      //
-      //   emitAnEvent("update_table1",event.affectedRows)
-      //
-      // }
+      if (event.table == 'currency'){
+        console.log(event);
+        console.log(event.affectedRows);
+
+        emitAnEvent("update_table1",event.affectedRows)
+
+      }
 
 
     },
