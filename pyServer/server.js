@@ -10,7 +10,7 @@ var server = require('http').Server(app);
 
 const io = require('socket.io')(server, {
   cors: {
-    origin: 'http://194.5.175.58:8000',
+    origin: 'http://localhost:8000',
     credentials: true
   }
 });
@@ -49,7 +49,7 @@ server.listen(8000,function(){
 console.log(MySQLEvents.STATEMENTS);
 const program = async () => {
   const connection = mysql.createConnection({
-    host: '194.5.175.58',
+    host: 'localhost',
     user: 'root',
     password: 'Hadi2150008140@$&!',
   });
