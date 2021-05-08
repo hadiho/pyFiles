@@ -56,16 +56,19 @@ const program = async () => {
 
   const instance = new MySQLEvents(connection, {
     startAtEnd: true,
-    
+    serverId: 3,
+    excludedSchemas: {
+      mysql: true,
+    },
   });
 
   await instance.start();
 
   instance.addTrigger({
-    name: 'TEST',
-    expression: '*',
-    statement: MySQLEvents.STATEMENTS.ALL,
-    onEvent: (event) => {
+    name: 'update main index',
+    expression: 'temp.main_index',
+    statement: MySQLEvents.STATEMENTS.UPDATE,
+    onEvent: async (event) => {
 
 
       // if (event.table == 'hot_money'){
