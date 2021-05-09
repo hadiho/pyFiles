@@ -16,6 +16,7 @@ import os.path
 from RepeatedTimer import RepeatedTimer
 import schedule
 import time
+import json
 from datetime import datetime
 from csv import writer
 import pytse_client as tse
@@ -93,14 +94,13 @@ def populateDatabase(dbname, tbname, table_list, flag):
                      + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
                 val["trade_volume"]) + "')"
         if flag == 10:
-            values = values + "('" + str(val["TIME"]) + "','" + str(val["NAME"]) + "','" + str(
-                val["FULLNAME"]) + "','" + str(val["CLOSE"]) + "','" \
-                     + str(val["PERCENT"]) + "','" + str(val["AVERAGE"]) + "','" + str(val["TOTAL"]) + "','" + str(
-                val["NUMBER"]) \
-                     + "','" + str(val["ATTRIBUTE"]) + "','" + str(val["TYPE"]) + "')"
+            values = values + "('" + str(val["time"]) + "','" + str(val["name"]) + "','" + str(
+                val["full_name"]) + "','" + str(val["close"]) + "','" \
+                     + str(val["percent"]) + "','" + str(val["number"]) + "','" + str(val["average"]) + "','" + str(
+                val["total"]) \
+                     + "','" + str(val["attribute"]) + "','" + str(val["type"]) + "')"
 
-    print(values)
-
+    # print(values)
     if len(table_list) > 0:
         connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                      user='root',
@@ -109,7 +109,7 @@ def populateDatabase(dbname, tbname, table_list, flag):
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
         with connection:
-            if dbName != "hot_money":
+            if tbname != "hot_money":
                 with connection.cursor() as cursor:
                     sql = "DELETE FROM " + tableName
                     cursor.execute(sql, args=None)
@@ -152,30 +152,30 @@ def hotMoney(dataA):
         hotMoneyList = []
         for idx, val in enumerate(dataA):
             value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
-            if value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and dataA[idx]['real_buy_count'] != "0":
-                print(value)
-                print(dataA[idx]['real_buy_count'])
-                print(saveData[idx]['real_buy_count'])
+            if value > 2000000 and saveData[idx]['real_buy_count'] != "0" and dataA[idx]['real_buy_count'] != "0":
                 count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
-                average = value / count
-                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'],
-                        "full_name": dataA[idx]['full_name'],
-                        "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                        "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
-                hotMoneyList.append(cell)
+                if count > 0:
+                    average = value / count
+                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
+                            "full_name": dataA[idx]['full_name'],
+                            "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                            "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
+                    hotMoneyList.append(cell)
 
             value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
-            if value > 2000000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
+            if value > 2000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
                 count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
-                average = value / count
-                cell = {"time": datetime.now().strftime('%Y-%m-%d'), "name": dataA[idx]['name'],
-                        "full_name": dataA[idx]['full_name'],
-                        "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                        "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
-                hotMoneyList.append(cell)
+                if count > 0:
+                    average = value / count
+                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
+                            "full_name": dataA[idx]['full_name'],
+                            "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                            "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
+                    hotMoneyList.append(cell)
 
         saveData = dataA
-        populateDatabase("price", "hot_money", hotMoneyList, 10)
+        if hotMoneyList:
+            populateDatabase("price", "hot_money", hotMoneyList, 10)
     except:
         logging.exception("Error")
 
@@ -225,10 +225,10 @@ def readCsv(json):
 
             if os.path.isfile(fileNameTicker) and is_non_zero_file(fileNameTicker):
                 # print(fileNameTicker)
-                df = pd.read_csv(fileNameTicker, index_col=False, low_memory=False)
+                df = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
 
                 now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-                past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
+                past = datetime.strptime(str(df.iloc[-1]['date']), '%Y-%m-%d')
 
                 if now > past:
                     # print("create ticker row")
@@ -261,16 +261,14 @@ def readCsv(json):
 
             if os.path.isfile(fileNameVolume) and is_non_zero_file(fileNameVolume):
                 # print(fileNameVolume)
-                df = pd.read_csv(fileNameVolume, index_col=False)
+                df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
                 now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-                past = datetime.strptime(df.iloc[-1]['date'], '%Y-%m-%d')
+                past = datetime.strptime(str(df.iloc[-1]['date']), '%Y-%m-%d')
 
                 if now > past:
                     # print("create volume row")
                     appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
-
-                    # df = df.sort_values(by='date', ascending=True)
 
                 elif now == past:
                     df.iloc[-1, df.columns.get_loc('date')] = row_contentsVolume[0]
@@ -312,15 +310,15 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-        # if dataA[idx]['name'] == 'یاقوت':
-        readCsv(dataA[idx])
+        if dataA[idx]['name'] == 'فایرا':
+            readCsv(dataA[idx])
 
 
 def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
         hotMoney(dataA)
-        historyVolume(dataA)
+        # historyVolume(dataA)
         lastList = []
         for data in dataA:
             cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
@@ -364,8 +362,8 @@ def detectVolume():
                     "market_value": data['market_value'],
                     }
             lastList.append(cell)
-
-        populateDatabase('price', 'last_price', lastList, 4)
+        if lastList:
+            populateDatabase('price', 'last_price', lastList, 4)
 
 
 def all_stocks():
@@ -378,7 +376,8 @@ def all_stocks():
                 "instance_code": data['instance_code'], "namad_code": data['namad_code']
                 }
         allStocks.append(cell)
-    populateDatabase('temp', 'all_stocks', allStocks, 5)
+        if allStocks:
+            populateDatabase('temp', 'all_stocks', allStocks, 5)
 
 
 def max_Volume_buy():
@@ -397,11 +396,12 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False)
-            df = pd.read_csv(fileNameVolume, index_col=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
             if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                    -1]:
                     maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
                     max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
                     max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
@@ -474,8 +474,8 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False)
-            df = pd.read_csv(fileNameVolume, index_col=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             df = df.astype({"individual_buy_vol": int})
             df = df.astype({"individual_buy_count": int})
             df = df.astype({"corporate_buy_vol": int})
@@ -485,7 +485,8 @@ def max_Volume_sell():
             df = df.astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                    -1]:
                     maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
                     max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
                     max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
@@ -617,8 +618,8 @@ def possibleQueueBuy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False)
-            df = pd.read_csv(fileNameVolume, index_col=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
                 if ticker.close[-1] > ticker.adjClose[-1]:
                     percent = (ticker.close[-1] - ticker.adjClose[-1]) * 100 / ticker.adjClose[-1]
@@ -638,8 +639,8 @@ def possibleQueueSell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False)
-            df = pd.read_csv(fileNameVolume, index_col=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
                 if ticker.adjClose[-1] > ticker.close[-1]:
                     percent = (ticker.adjClose[-1] - ticker.close[-1]) * 100 / ticker.close[-1]
@@ -676,7 +677,8 @@ def currency():
             cell = {"slug": data["slug"], "name": data["name"], "price": data["price"], "minPrice": data["min_price"],
                     "maxPrice": data["max_price"], "time": data["jalali_last_update"]}
             allCurrency.append(cell)
-        populateDatabase('temp', 'currency', allCurrency, 6)
+            if allCurrency:
+                populateDatabase('temp', 'currency', allCurrency, 6)
 
 
 def car():
@@ -692,13 +694,14 @@ def car():
             cell = {"model": data["model"], "type": data["type"], "price": data["price"],
                     "market_price": data["market_price"], "last_update": data["last_update"]}
             carList.append(cell)
-        populateDatabase('temp', 'car', carList, 8)
+            if carList:
+                populateDatabase('temp', 'car', carList, 8)
 
 
 def digital_currency():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&crypto_v2=all')
-    print("digital_currency ", resp.status_code)
+    # print("digital_currency ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
         # print(dataA)
@@ -709,13 +712,14 @@ def digital_currency():
                     "change_percent_24h": data["change_percent_24h"], "volume_24h": data["volume_24h"],
                     "market_cap": data["market_cap"]}
             allDCurrency.append(cell)
-        populateDatabase('temp', 'digital_currency', allDCurrency, 7)
+            if allDCurrency:
+                populateDatabase('temp', 'digital_currency', allDCurrency, 7)
 
 
 def shakhesBource():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '& market=market_bourse')
-    print("shakhesBource ", resp.status_code)
+    # print("shakhesBource ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
         shakhesBource = []
@@ -727,12 +731,13 @@ def shakhesBource():
             , "market_value": dataA["bourse"]["market_value"], "trade_number": dataA["bourse"]["trade_number"],
                 "trade_value": dataA["bourse"]["trade_value"], "trade_volume": dataA["bourse"]["trade_volume"]}
         shakhesBource.append(cell)
-        populateDatabase('temp', 'main_index', shakhesBource, 9)
+        if shakhesBource:
+            populateDatabase('temp', 'main_index', shakhesBource, 9)
 
 
 def startDetectVolume():
     print("start detectVolume...")
-    rt = RepeatedTimer(20, detectVolume())
+    rt = RepeatedTimer(10, detectVolume)
     try:
         sleep(14400)
     finally:
@@ -792,10 +797,23 @@ def downloadCsvs():
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for symbol in all_symbols():
-        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False)
+        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
+                         error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
+        df.to_csv('client_types_data/' + symbol + '.csv', index=False, low_memory=False, error_bad_lines=False)
         print(symbol)
+    print("finish download csv")
+
+
+def downloadOneCsv(symbol):
+    print("to download Csv ...")
+    tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
+    records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
+    df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
+                     error_bad_lines=False)
+    df = df.sort_values(by='date', ascending=True)
+    df.to_csv('client_types_data/' + symbol + '.csv', index=False)
+    print(symbol)
     print("finish download csv")
 
 
@@ -818,6 +836,8 @@ while True:
     schedule.run_pending()
     time.sleep(5)
 
+
+# downloadOneCsv('فایرا')
 # startServer()
 # downloadCsvs()
 # detectVolume()
@@ -831,3 +851,4 @@ while True:
 # startShakhes()
 # readCsv()
 # possibleQueueBuy()
+# startDetectVolume()
