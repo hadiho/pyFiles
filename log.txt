@@ -1,0 +1,33 @@
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&all&type=0 HTTP/1.1" 200 None
+ERROR: Error
+Traceback (most recent call last):
+  File "/Users/apple/Desktop/python/pyServer/hotMoney.py", line 148, in hotMoney
+    1 / 0
+ZeroDivisionError: division by zero
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+DEBUG: https://sourcearena.ir:443 "GET /api/?token=6e6671c1fcc42c94bf448fe7d880fa88&%20market=market_bourse HTTP/1.1" 200 208
+DEBUG: Starting new HTTPS connection (1): sourcearena.ir:443
+ERROR: Error
+Traceback (most recent call last):
+  File "/Users/apple/Desktop/python/pyServer/hotMoney.py", line 148, in hotMoney
+    1/0
+ZeroDivisionError: division by zero
+ERROR: Error
+Traceback (most recent call last):
+  File "/Users/apple/Desktop/python/pyServer/hotMoney.py", line 148, in hotMoney
+    1/0
+ZeroDivisionError: division by zero

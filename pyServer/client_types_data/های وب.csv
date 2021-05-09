@@ -1,0 +1,2 @@
+date,individual_buy_count,corporate_buy_count,individual_sell_count,corporate_sell_count,individual_buy_vol,corporate_buy_vol,individual_sell_vol,corporate_sell_vol,individual_buy_value,corporate_buy_value,individual_sell_value,corporate_sell_value,individual_buy_mean_price,individual_sell_mean_price,corporate_buy_mean_price,corporate_sell_mean_price,individual_ownership_change,jdate
+2021-05-02,144,1,92,1,40166,500000,540166,0,420538020,5235000000,5655538020,0,2920402,61473239,5235000000,0,0,

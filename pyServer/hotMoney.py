@@ -34,13 +34,13 @@ def populateDatabase(dbname, tbname, table_list, flag):
         if idx > 0:
             values = values + ","
         if flag == 1:
-            values = values + "('" + val["symbol"] + "','" + str(val["vol"]) + "','" + str(val["percent"]) + ")"
+            values = values + "('" + val["symbol"] + "','" + str(val["vol"]) + "','" + str(val["percent"]) + "')"
         if flag == 2:
             values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(
                 val["closeP"]) + "','" + str(
-                val["percent"]) + ")"
+                val["percent"]) + "')"
         if flag == 3:
-            values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(val["closeP"]) + ")"
+            values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(val["closeP"]) + "')"
         if flag == 4:
             values = values + "('" + str(val["name"]) + "','" + str(val["market"]) + "','" + str(val["instance_code"]) \
                      + "','" + str(val["namad_code"]) + "','" + str(val["industry_code"]) \
@@ -99,7 +99,7 @@ def populateDatabase(dbname, tbname, table_list, flag):
                 val["NUMBER"]) \
                      + "','" + str(val["ATTRIBUTE"]) + "','" + str(val["TYPE"]) + "')"
 
-        # print(values)
+    print(values)
 
     if len(table_list) > 0:
         connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
@@ -396,20 +396,12 @@ def max_Volume_buy():
         # df = tick.client_types
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
-        if os.path.isfile(fileNameVolume):
+        if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False)
             df = pd.read_csv(fileNameVolume, index_col=False)
-            # df = df.astype({"individual_buy_vol": int})
-            # df = df.astype({"individual_buy_count": int})
-            # df = df.astype({"corporate_buy_vol": int})
-            # df = df.astype({"corporate_buy_count": int})
-            # df = df.astype({"individual_ownership_change": int})
-            # df = df.astype({"corporate_sell_vol": int})
-            # df = df.astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[0].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
                     maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
                     max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
                     max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
@@ -481,7 +473,7 @@ def max_Volume_sell():
     for symbol in all_symbols():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
-        if os.path.isfile(fileNameVolume):
+        if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False)
             df = pd.read_csv(fileNameVolume, index_col=False)
             df = df.astype({"individual_buy_vol": int})
@@ -493,8 +485,7 @@ def max_Volume_sell():
             df = df.astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[0].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
                     maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
                     max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
                     max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
@@ -566,27 +557,27 @@ def pushMaxBuy():
     max_Volume_buyFrom30 = maxListBuy[2]
     max_Volume_buyFrom45 = maxListBuy[3]
     max_Volume_buyFrom60 = maxListBuy[4]
-    max_Volume_buyFrom10Individual = maxListBuy[5]
-    max_Volume_buyFrom20Individual = maxListBuy[6]
-    max_Volume_buyFrom30Individual = maxListBuy[7]
+    max_Individual_Volume_buy10 = maxListBuy[5]
+    max_Individual_Volume_buy20 = maxListBuy[6]
+    max_Individual_Volume_buy30 = maxListBuy[7]
 
     max_Volume_buyFrom10.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_buyFrom20.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_buyFrom30.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_buyFrom45.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_buyFrom60.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_buyFrom10Individual.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_buyFrom20Individual.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_buyFrom30Individual.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_buy10.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_buy20.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_buy30.sort(key=itemgetter('percent'), reverse=True)
 
     populateDatabase("temp", "max_Volume_buyFrom10", max_Volume_buyFrom10, 1)
     populateDatabase("temp", "max_Volume_buyFrom20", max_Volume_buyFrom20, 1)
     populateDatabase("temp", "max_Volume_buyFrom30", max_Volume_buyFrom30, 1)
     populateDatabase("temp", "max_Volume_buyFrom45", max_Volume_buyFrom45, 1)
     populateDatabase("temp", "max_Volume_buyFrom60", max_Volume_buyFrom60, 1)
-    populateDatabase("temp", "max_Volume_buyFrom10Individual", max_Volume_buyFrom10Individual, 1)
-    populateDatabase("temp", "max_Volume_buyFrom20Individual", max_Volume_buyFrom20Individual, 1)
-    populateDatabase("temp", "max_Volume_buyFrom30Individual", max_Volume_buyFrom30Individual, 1)
+    populateDatabase("temp", "max_Individual_Volume_buy10", max_Individual_Volume_buy10, 1)
+    populateDatabase("temp", "max_Individual_Volume_buy20", max_Individual_Volume_buy20, 1)
+    populateDatabase("temp", "max_Individual_Volume_buy30", max_Individual_Volume_buy30, 1)
 
 
 def pushMaxSell():
@@ -597,27 +588,27 @@ def pushMaxSell():
     max_Volume_sellFrom30 = maxListSell[2]
     max_Volume_sellFrom45 = maxListSell[3]
     max_Volume_sellFrom60 = maxListSell[4]
-    max_Volume_sellFrom10Individual = maxListSell[5]
-    max_Volume_sellFrom20Individual = maxListSell[6]
-    max_Volume_sellFrom30Individual = maxListSell[7]
+    max_Individual_Volume_sell10 = maxListSell[5]
+    max_Individual_Volume_sell20 = maxListSell[6]
+    max_Individual_Volume_sell30 = maxListSell[7]
 
     max_Volume_sellFrom10.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_sellFrom20.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_sellFrom30.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_sellFrom45.sort(key=itemgetter('percent'), reverse=True)
     max_Volume_sellFrom60.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_sellFrom10Individual.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_sellFrom20Individual.sort(key=itemgetter('percent'), reverse=True)
-    max_Volume_sellFrom30Individual.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_sell10.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_sell20.sort(key=itemgetter('percent'), reverse=True)
+    max_Individual_Volume_sell30.sort(key=itemgetter('percent'), reverse=True)
 
     populateDatabase("temp", "max_Volume_sellFrom10", max_Volume_sellFrom10, 1)
     populateDatabase("temp", "max_Volume_sellFrom20", max_Volume_sellFrom20, 1)
     populateDatabase("temp", "max_Volume_sellFrom30", max_Volume_sellFrom30, 1)
     populateDatabase("temp", "max_Volume_sellFrom45", max_Volume_sellFrom45, 1)
     populateDatabase("temp", "max_Volume_sellFrom60", max_Volume_sellFrom60, 1)
-    populateDatabase("temp", "max_Volume_sellFrom10Individual", max_Volume_sellFrom10Individual, 1)
-    populateDatabase("temp", "max_Volume_sellFrom20Individual", max_Volume_sellFrom20Individual, 1)
-    populateDatabase("temp", "max_Volume_sellFrom30Individual", max_Volume_sellFrom30Individual, 1)
+    populateDatabase("temp", "max_Individual_Volume_sell10", max_Individual_Volume_sell10, 1)
+    populateDatabase("temp", "max_Individual_Volume_sell20", max_Individual_Volume_sell20, 1)
+    populateDatabase("temp", "max_Individual_Volume_sell30", max_Individual_Volume_sell30, 1)
 
 
 def possibleQueueBuy():
@@ -625,16 +616,16 @@ def possibleQueueBuy():
     for symbol in all_symbols():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
-        if os.path.isfile(fileNameVolume):
+        if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False)
             df = pd.read_csv(fileNameVolume, index_col=False)
-            if ticker.last_price is not None and today == df['date'].iloc[-1]:
-                if ticker.last_price > ticker.adj_close:
-                    percent = (ticker.last_price - ticker.adj_close) * 100 / ticker.adj_close
+            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker.close[-1] > ticker.adjClose[-1]:
+                    percent = (ticker.close[-1] - ticker.adjClose[-1]) * 100 / ticker.adjClose[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker.last_price,
-                                "closeP": ticker.adj_close,
+                                "close": ticker.close[-1],
+                                "closeP": ticker.adjClose[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleBuy.append(cell)
 
@@ -646,16 +637,16 @@ def possibleQueueSell():
     for symbol in all_symbols():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
-        if os.path.isfile(fileNameVolume):
+        if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False)
             df = pd.read_csv(fileNameVolume, index_col=False)
-            if ticker.last_price is not None and today == df['date'].iloc[-1]:
-                if ticker.adj_close > ticker.last_price:
-                    percent = (ticker.adj_close - ticker.last_price) * 100 / ticker.last_price
+            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker.adjClose[-1] > ticker.close[-1]:
+                    percent = (ticker.adjClose[-1] - ticker.close[-1]) * 100 / ticker.close[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker.last_price,
-                                "closeP": ticker.adj_close,
+                                "close": ticker.close[-1],
+                                "closeP": ticker.adjClose[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleSell.append(cell)
 
@@ -680,8 +671,6 @@ def currency():
     print("currency ", resp.status_code)
     dataA = json.loads(resp.text)
     if resp.status_code == 200:
-        # print(dataA)
-
         allCurrency = []
         for data in dataA['data']:
             cell = {"slug": data["slug"], "name": data["name"], "price": data["price"], "minPrice": data["min_price"],
@@ -750,7 +739,7 @@ def startDetectVolume():
         rt.stop()
 
 
-def dateVolume():
+def timeVolume():
     pushMaxBuy()
     pushMaxSell()
     possibleQueueBuy()
@@ -759,7 +748,7 @@ def dateVolume():
 
 def startDateVolume():
     print("start dateVolume...")
-    rt = RepeatedTimer(1800, dateVolume)
+    rt = RepeatedTimer(1800, timeVolume)
     try:
         sleep(14400)
     finally:
@@ -784,7 +773,7 @@ def startServer():
         rt = RepeatedTimer(800, currency)
         rt = RepeatedTimer(700, digital_currency)
         rt = RepeatedTimer(30, detectVolume)
-        rt = RepeatedTimer(1080, dateVolume)
+        rt = RepeatedTimer(1080, timeVolume)
         try:
             sleep(14400)
         finally:
@@ -815,12 +804,7 @@ logging.basicConfig(filename="log.txt",
                     format='%(levelname)s: %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.ERROR)
-# logging.debug('debug')
-# logging.info('info')
-# logging.warning('warning')
-# logging.error('error')
-# logging.critical('critical')
-# logging.exception('exception')
+
 logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
@@ -837,6 +821,7 @@ while True:
 # startServer()
 # downloadCsvs()
 # detectVolume()
+# timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
@@ -845,3 +830,4 @@ while True:
 # shakhesBource()
 # startShakhes()
 # readCsv()
+# possibleQueueBuy()

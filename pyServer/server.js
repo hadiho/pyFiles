@@ -65,7 +65,7 @@ const program = async () => {
   await instance.start();
 
   instance.addTrigger({
-    name: 'update main index',
+    name: 'TEST',
     expression: '*',
     statement: MySQLEvents.STATEMENTS.ALL,
     onEvent: async (event) => {
