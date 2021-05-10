@@ -574,7 +574,6 @@ def pushMaxBuy():
     max_Individual_Volume_buy20.sort(key=itemgetter('percent'), reverse=True)
     max_Individual_Volume_buy30.sort(key=itemgetter('percent'), reverse=True)
 
-    print("pushMaxBuy sql")
     populateDatabase("temp", "max_Volume_buyFrom10", max_Volume_buyFrom10, 1)
     populateDatabase("temp", "max_Volume_buyFrom20", max_Volume_buyFrom20, 1)
     populateDatabase("temp", "max_Volume_buyFrom30", max_Volume_buyFrom30, 1)
@@ -624,9 +623,9 @@ def possibleQueueBuy():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
-                if ticker.close[-1] > ticker.adjClose[-1]:
-                    percent = (ticker.close[-1] - ticker.adjClose[-1]) * 100 / ticker.adjClose[-1]
+            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker['close'].iloc[-1] > ticker['adjClose'].iloc[-1]:
+                    percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
                                 "close": ticker.close[-1],
@@ -645,13 +644,13 @@ def possibleQueueSell():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
-                if ticker.adjClose[-1] > ticker.close[-1]:
-                    percent = (ticker.adjClose[-1] - ticker.close[-1]) * 100 / ticker.close[-1]
+            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker['adjClose'].iloc[-1]> ticker['close'].iloc[-1]:
+                    percent = (ticker['adjClose'].iloc[-1] - ticker['close'].iloc[-1]) * 100 / ticker['close'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker.close[-1],
-                                "closeP": ticker.adjClose[-1],
+                                "close": ticker['close'].iloc[-1],
+                                "closeP": ticker['adjClose'].iloc[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleSell.append(cell)
 
@@ -661,13 +660,15 @@ def possibleQueueSell():
 def pushPossibleQueueBuy():
     pushPossibleQBuy = possibleQueueBuy()
     pushPossibleQBuy.sort(key=itemgetter('percent'), reverse=True)
-    populateDatabase("temp", "possibleQueueBuy", pushPossibleQBuy, 2)
+    if pushPossibleQBuy:
+        populateDatabase("temp", "possibleQueueBuy", pushPossibleQBuy, 2)
 
 
 def pushPossibleQueueSell():
     pushPossibleQSell = possibleQueueSell()
     pushPossibleQSell.sort(key=itemgetter('percent'), reverse=True)
-    populateDatabase("temp", "possibleQueueSell", pushPossibleQSell, 2)
+    if pushPossibleQSell:
+        populateDatabase("temp", "possibleQueueSell", pushPossibleQSell, 2)
 
 
 def currency():
@@ -801,10 +802,9 @@ def downloadCsvs():
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for symbol in all_symbols():
-        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
-                         error_bad_lines=False)
+        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False, error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv', index=False, low_memory=False, error_bad_lines=False)
+        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
         print(symbol)
     print("finish download csv")
 

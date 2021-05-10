@@ -623,9 +623,9 @@ def possibleQueueBuy():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
-                if ticker.close[-1] > ticker.adjClose[-1]:
-                    percent = (ticker.close[-1] - ticker.adjClose[-1]) * 100 / ticker.adjClose[-1]
+            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker['close'].iloc[-1] > ticker['adjClose'].iloc[-1]:
+                    percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
                                 "close": ticker.close[-1],
@@ -644,13 +644,13 @@ def possibleQueueSell():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker.close[-1] is not None and today == df['date'].iloc[-1]:
-                if ticker.adjClose[-1] > ticker.close[-1]:
-                    percent = (ticker.adjClose[-1] - ticker.close[-1]) * 100 / ticker.close[-1]
+            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+                if ticker['adjClose'].iloc[-1]> ticker['close'].iloc[-1]:
+                    percent = (ticker['adjClose'].iloc[-1] - ticker['close'].iloc[-1]) * 100 / ticker['close'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker.close[-1],
-                                "closeP": ticker.adjClose[-1],
+                                "close": ticker['close'].iloc[-1],
+                                "closeP": ticker['adjClose'].iloc[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleSell.append(cell)
 
@@ -844,7 +844,7 @@ logger = logging.getLogger('urbanGUI')
 # startServer()
 # downloadCsvs()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
@@ -854,4 +854,4 @@ logger = logging.getLogger('urbanGUI')
 # startShakhes()
 # readCsv()
 # possibleQueueBuy()
-startDetectVolume()
+# startDetectVolume()
