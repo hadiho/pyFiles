@@ -396,69 +396,70 @@ def max_Volume_buy():
     for symbol in all_symbols():
         # tick = tse.Ticker(symbol)
         # df = tick.client_types
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
-        if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+        if symbol == "کلوند":
+            fileNameTicker = 'tickers_data/' + symbol + '.csv'
+            fileNameVolume = 'client_types_data/' + symbol + '.csv'
+            if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
+                ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+                df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
-            if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
-                    maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
-                    max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
-                    max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
-                    max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
-                    max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
-                    max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
+                if not ticker.empty and ticker.size > 2:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                        -1]:
+                        maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
+                        max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
+                        max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
+                        max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
+                        max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
+                        max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
 
-                    maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
-                    max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
-                    max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
-                    max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
+                        maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
+                        max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
+                        max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
+                        max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
 
-                    if maxNow > max10:
-                        percent = (maxNow - max10) * 100 / max10
-                        y10 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy10.append(y10)
+                        if maxNow > max10:
+                            percent = (maxNow - max10) / maxNow
+                            y10 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy10.append(y10)
 
-                    if maxNow > max20:
-                        percent = (maxNow - max20) * 100 / max20
-                        y20 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy20.append(y20)
+                        if maxNow > max20:
+                            percent = (maxNow - max20) / maxNow
+                            y20 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy20.append(y20)
 
-                    if maxNow > max30:
-                        percent = (maxNow - max30) * 100 / max30
-                        y30 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy30.append(y30)
+                        if maxNow > max30:
+                            percent = (maxNow - max30) / maxNow
+                            y30 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy30.append(y30)
 
-                    if maxNow > max45:
-                        percent = (maxNow - max45) * 100 / max45
-                        y45 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy45.append(y45)
+                        if maxNow > max45:
+                            percent = (maxNow - max45) / maxNow
+                            y45 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy45.append(y45)
 
-                    if maxNow > max60:
-                        percent = (maxNow - max60) * 100 / max60
-                        y60 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy60.append(y60)
+                        if maxNow > max60:
+                            percent = (maxNow - max60) / maxNow
+                            y60 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy60.append(y60)
 
-                    if maxNowIndividual > max10Individual:
-                        percent = (maxNowIndividual - max10Individual) * 100 / max10Individual
-                        y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy10Ind.append(y10Individual)
+                        if maxNowIndividual > max10Individual:
+                            percent = (maxNowIndividual - max10Individual) / maxNow
+                            y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy10Ind.append(y10Individual)
 
-                    if maxNowIndividual > max20Individual:
-                        percent = (maxNowIndividual - max20Individual) * 100 / max20Individual
-                        y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy20Ind.append(y20Individual)
+                        if maxNowIndividual > max20Individual:
+                            percent = (maxNowIndividual - max20Individual) / maxNow
+                            y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy20Ind.append(y20Individual)
 
-                    if maxNowIndividual > max30Individual:
-                        percent = (maxNowIndividual - max30Individual) * 100 / max30Individual
-                        y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy30Ind.append(y30Individual)
+                        if maxNowIndividual > max30Individual:
+                            percent = (maxNowIndividual - max30Individual) / maxNow
+                            y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy30Ind.append(y30Individual)
 
     return buy10, buy20, buy30, buy45, buy60, buy10Ind, buy20Ind, buy30Ind
 
@@ -503,49 +504,49 @@ def max_Volume_sell():
                     max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
 
                     if maxNowSell > max10Sell:
-                        percent = (maxNowSell - max10Sell) * 100 / max10Sell
+                        percent = (maxNowSell - max10Sell) / maxNowSell
                         y10Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell10.append(y10Sell)
 
                     if maxNowSell > max20Sell:
-                        percent = (maxNowSell - max20Sell) * 100 / max20Sell
+                        percent = (maxNowSell - max20Sell) / maxNowSell
                         y20Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell20.append(y20Sell)
 
                     if maxNowSell > max30Sell:
-                        percent = (maxNowSell - max30Sell) * 100 / max30Sell
+                        percent = (maxNowSell - max30Sell) / maxNowSell
                         y30Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell30.append(y30Sell)
 
                     if maxNowSell > max45Sell:
-                        percent = (maxNowSell - max45Sell) * 100 / max45Sell
+                        percent = (maxNowSell - max45Sell) / maxNowSell
                         y45Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell45.append(y45Sell)
 
                     if maxNowSell > max60Sell:
-                        percent = (maxNowSell - max60Sell) * 100 / max60Sell
+                        percent = (maxNowSell - max60Sell)  / maxNowSell
                         y60Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell60.append(y60Sell)
 
                     if maxNowIndividualSell > max10IndividualSell:
-                        percent = (maxNowIndividualSell - max10IndividualSell) * 100 / max10IndividualSell
+                        percent = (maxNowIndividualSell - max10IndividualSell) / maxNowSell
                         y10IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
                                              "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell10Ind.append(y10IndividualSell)
 
                     if maxNowIndividualSell > max20IndividualSell:
-                        percent = (maxNowIndividualSell - max20IndividualSell) * 100 / max20IndividualSell
+                        percent = (maxNowIndividualSell - max20IndividualSell) / maxNowSell
                         y20IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
                                              "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell20Ind.append(y20IndividualSell)
 
                     if maxNowIndividualSell > max30IndividualSell:
-                        percent = (maxNowIndividualSell - max30IndividualSell) * 100 / max30IndividualSell
+                        percent = (maxNowIndividualSell - max30IndividualSell) / maxNowSell
                         y30IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
                                              "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell30Ind.append(y30IndividualSell)
@@ -623,7 +624,7 @@ def possibleQueueBuy():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+            if ticker['close'].iloc[-1] is not None :#and today == df['date'].iloc[-1]:
                 if ticker['close'].iloc[-1] > ticker['adjClose'].iloc[-1]:
                     percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[-1]
                     if percent > 3:
@@ -644,7 +645,7 @@ def possibleQueueSell():
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
+            if ticker['close'].iloc[-1] is not None :#and today == df['date'].iloc[-1]:
                 if ticker['adjClose'].iloc[-1]> ticker['close'].iloc[-1]:
                     percent = (ticker['adjClose'].iloc[-1] - ticker['close'].iloc[-1]) * 100 / ticker['close'].iloc[-1]
                     if percent > 3:
@@ -809,7 +810,7 @@ def downloadCsvs():
 
 
 def downloadOneCsv(symbol):
-    print("to download Csv ...")
+    print("to download one Csv ...")
     tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
     df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
@@ -840,7 +841,7 @@ logger = logging.getLogger('urbanGUI')
 #     time.sleep(5)
 
 
-# downloadOneCsv('فایرا')
+# downloadOneCsv('کلوند')
 # startServer()
 # downloadCsvs()
 # detectVolume()
