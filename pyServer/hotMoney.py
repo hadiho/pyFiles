@@ -318,7 +318,7 @@ def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
         hotMoney(dataA)
-        # historyVolume(dataA)
+        historyVolume(dataA)
         lastList = []
         for data in dataA:
             cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
@@ -773,11 +773,11 @@ def startShakhes():
 def startServer():
     try:
         print("I'm working...")
-        rt = RepeatedTimer(10, shakhesBource)
+        rt = RepeatedTimer(30, shakhesBource)
         rt = RepeatedTimer(1000, car)
         rt = RepeatedTimer(800, currency)
         rt = RepeatedTimer(700, digital_currency)
-        rt = RepeatedTimer(30, detectVolume)
+        rt = RepeatedTimer(45, detectVolume)
         rt = RepeatedTimer(1080, timeVolume)
         try:
             sleep(14400)
