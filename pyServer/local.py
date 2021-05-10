@@ -803,7 +803,7 @@ def downloadCsvs():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv', index=False, low_memory=False, error_bad_lines=False)
+        df.to_csv('client_types_data/' + symbol + '.csv')
         print(symbol)
     print("finish download csv")
 
