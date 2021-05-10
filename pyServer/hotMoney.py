@@ -148,6 +148,7 @@ def hotMoney(dataA):
     if saveData is None:
         saveData = dataA
 
+
     try:
         hotMoneyList = []
         for idx, val in enumerate(dataA):
