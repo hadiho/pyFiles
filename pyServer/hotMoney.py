@@ -628,8 +628,8 @@ def possibleQueueBuy():
                     percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker.close[-1],
-                                "closeP": ticker.adjClose[-1],
+                                "close": ticker['close'].iloc[-1],
+                                "closeP": ticker['adjClose'].iloc[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleBuy.append(cell)
 
