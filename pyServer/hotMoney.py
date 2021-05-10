@@ -147,38 +147,40 @@ def hotMoney(dataA):
     global saveData
     if saveData is None:
         saveData = dataA
+    else:
+        try:
+            hotMoneyList = []
+            for idx, val in enumerate(dataA):
+                value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
+                if saveData[idx]['real_buy_count'] is not None and dataA[idx]['real_buy_count'] is not None and value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and \
+                        dataA[idx]['real_buy_count'] != "0":
+                    print(value)
+                    count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
+                    if count > 0:
+                        average = value / count
+                        cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
+                                "full_name": dataA[idx]['full_name'],
+                                "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                                "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
+                        hotMoneyList.append(cell)
 
+                value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
+                if saveData[idx]['real_sell_count'] is not None and dataA[idx]['real_sell_count'] is not None and value > 2000000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
+                    count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
+                    if count > 0:
+                        average = value / count
+                        cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
+                                "full_name": dataA[idx]['full_name'],
+                                "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
+                                "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
+                        hotMoneyList.append(cell)
 
-    try:
-        hotMoneyList = []
-        for idx, val in enumerate(dataA):
-            value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
-            if value > 2000000 and saveData[idx]['real_buy_count'] != "0" and dataA[idx]['real_buy_count'] != "0":
-                count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
-                if count > 0:
-                    average = value / count
-                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
-                            "full_name": dataA[idx]['full_name'],
-                            "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                            "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
-                    hotMoneyList.append(cell)
-
-            value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
-            if value > 2000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
-                count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
-                if count > 0:
-                    average = value / count
-                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
-                            "full_name": dataA[idx]['full_name'],
-                            "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                            "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
-                    hotMoneyList.append(cell)
-
-        saveData = dataA
-        if hotMoneyList:
-            populateDatabase("price", "hot_money", hotMoneyList, 10)
-    except:
-        logging.exception("Error")
+            saveData = dataA
+            if hotMoneyList:
+                print(hotMoneyList)
+                populateDatabase("price", "hot_money", hotMoneyList, 10)
+        except:
+            logging.exception("Error")
 
 
 def appendNewLineToCsv(file_name, list_of_elem, isUpdate):
@@ -319,7 +321,7 @@ def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
         hotMoney(dataA)
-        historyVolume(dataA)
+        # historyVolume(dataA)
         lastList = []
         for data in dataA:
             cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
@@ -362,7 +364,7 @@ def detectVolume():
                     "2_buy_volume": data['2_buy_volume'], "3_buy_volume": data['3_buy_volume'],
                     "market_value": data['market_value'],
                     }
-            lastList.append(cell)
+            lastList.append(cell)  # (1366, "Incorrect integer value: 'None' for column 'industry_code' at row 1")
         if lastList:
             populateDatabase('price', 'last_price', lastList, 4)
 
@@ -774,11 +776,11 @@ def startShakhes():
 def startServer():
     try:
         print("I'm working...")
-        rt = RepeatedTimer(30, shakhesBource)
+        rt = RepeatedTimer(10, shakhesBource)
         rt = RepeatedTimer(1000, car)
         rt = RepeatedTimer(800, currency)
         rt = RepeatedTimer(700, digital_currency)
-        rt = RepeatedTimer(45, detectVolume)
+        rt = RepeatedTimer(30, detectVolume)
         rt = RepeatedTimer(1080, timeVolume)
         try:
             sleep(14400)
@@ -828,10 +830,11 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("10:40").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("09:00").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("16:00").do(downloadCsvs)
+schedule.every().day.at("17:00").do(downloadCsvs)
+schedule.every().day.at("17:30").do(timeVolume)
 
 while True:
     schedule.run_pending()
