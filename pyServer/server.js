@@ -64,44 +64,48 @@ const program = async () => {
 
   await instance.start();
 
+   instance.addTrigger({
+    name: 'Main Index',
+    expression: 'temp.main_index.b_index',
+    statement: MySQLEvents.STATEMENTS.UPDATE,
+    onEvent: async (event) => {
+      if (event.table == 'main_index'){
+              // console.log(event);
+              // console.log(event.affectedRows);
+              emitAnEvent("update_main_index",event.affectedRows)
+      }
+   },
+  });
+
   instance.addTrigger({
-    name: 'TEST',
-    expression: '*',
-    statement: MySQLEvents.STATEMENTS.ALL,
+    name: 'Hot Money',
+    expression: 'price.hot_money',
+    statement: MySQLEvents.STATEMENTS.INSERT,
     onEvent: async (event) => {
 
-
       if (event.table == 'hot_money'){
-        console.log(event);
+        // console.log(event);
         console.log(event.affectedRows);
-
         emitAnEvent("update_hot_money",event.affectedRows)
-
       }
 
-      if (event.table == 'last_price'){
-        console.log(event);
-        console.log(event.affectedRows);
+      // if (event.table == 'last_price'){
+      //   console.log(event);
+      //   console.log(event.affectedRows);
+      //
+      //   emitAnEvent("update_detail", event.affectedRows)
+      //
+      // }
 
-        emitAnEvent("update_detail", event.affectedRows)
 
-      }
 
-      if (event.table == 'main_index'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_main_index",event.affectedRows)
-
-      }
-
-      if (event.table == 'currency'){
-        console.log(event);
-        console.log(event.affectedRows);
-
-        emitAnEvent("update_table1",event.affectedRows)
-
-      }
+      // if (event.table == 'currency'){
+      //   console.log(event);
+      //   console.log(event.affectedRows);
+      //
+      //   emitAnEvent("update_table1",event.affectedRows)
+      //
+      // }
 
 
     },

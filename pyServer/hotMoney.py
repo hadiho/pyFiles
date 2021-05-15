@@ -27,81 +27,83 @@ token = '6e6671c1fcc42c94bf448fe7d880fa88'
 today = datetime.today().strftime('%Y-%m-%d')
 
 
-def populateDatabase(dbname, tbname, table_list, flag):
+def populateDatabase(dbname, tbname, table_list, flag, clear):
     dbName = dbname
     tableName = tbname
     values = ""
-    for idx, val in enumerate(table_list):
-        if idx > 0:
-            values = values + ","
-        if flag == 1:
-            values = values + "('" + val["symbol"] + "','" + str(val["vol"]) + "','" + str(val["percent"]) + "')"
-        if flag == 2:
-            values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(
-                val["closeP"]) + "','" + str(
-                val["percent"]) + "')"
-        if flag == 3:
-            values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(val["closeP"]) + "')"
-        if flag == 4:
-            values = values + "('" + str(val["name"]) + "','" + str(val["market"]) + "','" + str(val["instance_code"]) \
-                     + "','" + str(val["namad_code"]) + "','" + str(val["industry_code"]) \
-                     + "','" + str(val["industry"]) + "','" + str(val["state"]) \
-                     + "','" + str(val["full_name"]) + "','" + str(val["first_price"]) \
-                     + "','" + str(val["yesterday_price"]) + "','" + str(val["close_price"]) \
-                     + "','" + str(val["close_price_change"]) + "','" + str(val["close_price_change_percent"]) \
-                     + "','" + str(val["final_price"]) + "','" + str(val["final_price_change"]) \
-                     + "','" + str(val["final_price_change_percent"]) + "','" + str(val["eps"]) \
-                     + "','" + str(val["free_float"]) + "','" + str(val["highest_price"]) \
-                     + "','" + str(val["lowest_price"]) + "','" + str(val["daily_price_high"]) \
-                     + "','" + str(val["daily_price_low"]) + "','" + str(val["P:E"]) \
-                     + "','" + str(val["trade_number"]) + "','" + str(val["trade_volume"]) \
-                     + "','" + str(val["trade_value"]) + "','" + str(val["all_stocks"]) \
-                     + "','" + str(val["basis_volume"]) + "','" + str(val["real_buy_volume"]) \
-                     + "','" + str(val["co_buy_volume"]) + "','" + str(val["real_sell_volume"]) \
-                     + "','" + str(val["co_sell_volume"]) + "','" + str(val["real_buy_value"]) \
-                     + "','" + str(val["co_buy_value"]) + "','" + str(val["real_sell_value"]) \
-                     + "','" + str(val["co_sell_value"]) + "','" + str(val["real_buy_count"]) \
-                     + "','" + str(val["co_buy_count"]) + "','" + str(val["real_sell_count"]) \
-                     + "','" + str(val["co_sell_count"]) + "','" + str(val["1_sell_count"]) \
-                     + "','" + str(val["2_sell_count"]) + "','" + str(val["3_sell_count"]) \
-                     + "','" + str(val["1_buy_count"]) + "','" + str(val["2_buy_count"]) \
-                     + "','" + str(val["3_buy_count"]) + "','" + str(val["1_sell_price"]) \
-                     + "','" + str(val["2_sell_price"]) + "','" + str(val["3_sell_price"]) \
-                     + "','" + str(val["1_buy_price"]) + "','" + str(val["2_buy_price"]) \
-                     + "','" + str(val["3_buy_price"]) + "','" + str(val["1_sell_volume"]) \
-                     + "','" + str(val["2_sell_volume"]) + "','" + str(val["3_sell_volume"]) \
-                     + "','" + str(val["1_buy_volume"]) + "','" + str(val["2_buy_volume"]) \
-                     + "','" + str(val["3_buy_volume"]) + "','" + str(val["market_value"]) + "')"
-        if flag == 5:
-            values = values + "('" + str(val["name"]) + "','" + str(val["full_name"]) + "','" + str(
-                val["instance_code"]) + "','" + str(val["namad_code"]) + "')"
-        if flag == 6:
-            values = values + "('" + str(val["slug"]) + "','" + str(val["name"]) + "','" + str(
-                val["price"]) + "','" + str(val["minPrice"]) + "','" + str(val["maxPrice"]) + "','" + str(
-                val["time"]) + "')"
-        if flag == 7:
-            values = values + "('" + str(val["symbol"]) + "','" + str(val["name"]) + "','" + str(
-                val["price"]) + "','" + str(val["change_percent_24h"]) + "','" + str(val["volume_24h"]) + \
-                     "','" + str(val["market_cap"]) + "')"
-        if flag == 8:
-            values = values + "('" + str(val["model"]) + "','" + str(val["type"]) + "','" + str(
-                val["price"]) + "','" + str(val["market_price"]) + "','" + str(val["last_update"]) + "')"
-        if flag == 9:
-            values = values + "('" + str(val["state"]) + "','" + str(val["b_index"]) + "','" + str(
-                val["index_change"]) + "','" + str(val["index_change_percent"]) + "','" \
-                     + str(val["index_h"]) + "','" + str(val["index_h_change"]) + "','" + str(
-                val["index_h_change_percent"]) + "','" + str(val["market_value"]) \
-                     + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
-                val["trade_volume"]) + "')"
-        if flag == 10:
-            values = values + "('" + str(val["time"]) + "','" + str(val["name"]) + "','" + str(
-                val["full_name"]) + "','" + str(val["close"]) + "','" \
-                     + str(val["percent"]) + "','" + str(val["number"]) + "','" + str(val["average"]) + "','" + str(
-                val["total"]) \
-                     + "','" + str(val["attribute"]) + "','" + str(val["type"]) + "')"
+    if clear == False:
+        for idx, val in enumerate(table_list):
+            if idx > 0:
+                values = values + ","
+            if flag == 1:
+                values = values + "('" + val["symbol"] + "','" + str(val["vol"]) + "','" + str(val["percent"]) + "')"
+            if flag == 2:
+                values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(
+                    val["closeP"]) + "','" + str(
+                    val["percent"]) + "')"
+            if flag == 3:
+                values = values + "('" + val["symbol"] + "','" + str(val["close"]) + "','" + str(val["closeP"]) + "')"
+            if flag == 4:
+                values = values + "('" + str(val["name"]) + "','" + str(val["market"]) + "','" + str(
+                    val["instance_code"]) \
+                         + "','" + str(val["namad_code"]) + "','" + str(val["industry_code"]) \
+                         + "','" + str(val["industry"]) + "','" + str(val["state"]) \
+                         + "','" + str(val["full_name"]) + "','" + str(val["first_price"]) \
+                         + "','" + str(val["yesterday_price"]) + "','" + str(val["close_price"]) \
+                         + "','" + str(val["close_price_change"]) + "','" + str(val["close_price_change_percent"]) \
+                         + "','" + str(val["final_price"]) + "','" + str(val["final_price_change"]) \
+                         + "','" + str(val["final_price_change_percent"]) + "','" + str(val["eps"]) \
+                         + "','" + str(val["free_float"]) + "','" + str(val["highest_price"]) \
+                         + "','" + str(val["lowest_price"]) + "','" + str(val["daily_price_high"]) \
+                         + "','" + str(val["daily_price_low"]) + "','" + str(val["P:E"]) \
+                         + "','" + str(val["trade_number"]) + "','" + str(val["trade_volume"]) \
+                         + "','" + str(val["trade_value"]) + "','" + str(val["all_stocks"]) \
+                         + "','" + str(val["basis_volume"]) + "','" + str(val["real_buy_volume"]) \
+                         + "','" + str(val["co_buy_volume"]) + "','" + str(val["real_sell_volume"]) \
+                         + "','" + str(val["co_sell_volume"]) + "','" + str(val["real_buy_value"]) \
+                         + "','" + str(val["co_buy_value"]) + "','" + str(val["real_sell_value"]) \
+                         + "','" + str(val["co_sell_value"]) + "','" + str(val["real_buy_count"]) \
+                         + "','" + str(val["co_buy_count"]) + "','" + str(val["real_sell_count"]) \
+                         + "','" + str(val["co_sell_count"]) + "','" + str(val["1_sell_count"]) \
+                         + "','" + str(val["2_sell_count"]) + "','" + str(val["3_sell_count"]) \
+                         + "','" + str(val["1_buy_count"]) + "','" + str(val["2_buy_count"]) \
+                         + "','" + str(val["3_buy_count"]) + "','" + str(val["1_sell_price"]) \
+                         + "','" + str(val["2_sell_price"]) + "','" + str(val["3_sell_price"]) \
+                         + "','" + str(val["1_buy_price"]) + "','" + str(val["2_buy_price"]) \
+                         + "','" + str(val["3_buy_price"]) + "','" + str(val["1_sell_volume"]) \
+                         + "','" + str(val["2_sell_volume"]) + "','" + str(val["3_sell_volume"]) \
+                         + "','" + str(val["1_buy_volume"]) + "','" + str(val["2_buy_volume"]) \
+                         + "','" + str(val["3_buy_volume"]) + "','" + str(val["market_value"]) + "')"
+            if flag == 5:
+                values = values + "('" + str(val["name"]) + "','" + str(val["full_name"]) + "','" + str(
+                    val["instance_code"]) + "','" + str(val["namad_code"]) + "')"
+            if flag == 6:
+                values = values + "('" + str(val["slug"]) + "','" + str(val["name"]) + "','" + str(
+                    val["price"]) + "','" + str(val["minPrice"]) + "','" + str(val["maxPrice"]) + "','" + str(
+                    val["time"]) + "')"
+            if flag == 7:
+                values = values + "('" + str(val["symbol"]) + "','" + str(val["name"]) + "','" + str(
+                    val["price"]) + "','" + str(val["change_percent_24h"]) + "','" + str(val["volume_24h"]) + \
+                         "','" + str(val["market_cap"]) + "')"
+            if flag == 8:
+                values = values + "('" + str(val["model"]) + "','" + str(val["type"]) + "','" + str(
+                    val["price"]) + "','" + str(val["market_price"]) + "','" + str(val["last_update"]) + "')"
+            if flag == 9:
+                values = values + "('" + str(val["state"]) + "','" + str(val["b_index"]) + "','" + str(
+                    val["index_change"]) + "','" + str(val["index_change_percent"]) + "','" \
+                         + str(val["index_h"]) + "','" + str(val["index_h_change"]) + "','" + str(
+                    val["index_h_change_percent"]) + "','" + str(val["market_value"]) \
+                         + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
+                    val["trade_volume"]) + "')"
+            if flag == 10:
+                values = values + "('" + str(val["time"]) + "','" + str(val["name"]) + "','" + str(
+                    val["full_name"]) + "','" + str(val["close"]) + "','" \
+                         + str(val["percent"]) + "','" + str(val["number"]) + "','" + str(val["average"]) + "','" + str(
+                    val["total"]) \
+                         + "','" + str(val["attribute"]) + "','" + str(val["type"]) + "')"
 
     # print(values)
-    if len(table_list) > 0:
+    if len(table_list) > 0 or clear:
         connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                      user='root',
                                      password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
@@ -109,17 +111,36 @@ def populateDatabase(dbname, tbname, table_list, flag):
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
         with connection:
-            if tbname != "hot_money":
+            if clear:
                 with connection.cursor() as cursor:
-                    sql = "DELETE FROM " + tableName
+                    sql = "DELETE FROM hot_money"
                     cursor.execute(sql, args=None)
                 connection.commit()
+            else:
 
-            with connection.cursor() as cursor:
-                sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
-                cursor.execute("SET CHARACTER SET utf8", args=None)
-                cursor.execute(sql, args=None)
-            connection.commit()
+                if tableName == "hot_money":
+                    with connection.cursor() as cursor:
+                        sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
+                        cursor.execute("SET CHARACTER SET utf8", args=None)
+                        cursor.execute(sql, args=None)
+                    connection.commit()
+                elif tableName == "main_index":
+                    with connection.cursor() as cursor:
+                        sql = "UPDATE " + tableName + " SET VALUES " + values + " WHERE 1 ;"
+                        cursor.execute("SET CHARACTER SET utf8", args=None)
+                        cursor.execute(sql, args=None)
+                    connection.commit()
+                else:
+                    with connection.cursor() as cursor:
+                        sql = "DELETE FROM " + tableName
+                        cursor.execute(sql, args=None)
+                    connection.commit()
+                    sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
+                    cursor.execute("SET CHARACTER SET utf8", args=None)
+                    cursor.execute(sql, args=None)
+                    connection.commit()
+
+
 
 
 def is_non_zero_file(fpath):
@@ -152,7 +173,8 @@ def hotMoney(dataA):
             hotMoneyList = []
             for idx, val in enumerate(dataA):
                 value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
-                if saveData[idx]['real_buy_count'] is not None and dataA[idx]['real_buy_count'] is not None and value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and \
+                if saveData[idx]['real_buy_count'] is not None and dataA[idx][
+                    'real_buy_count'] is not None and value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and \
                         dataA[idx]['real_buy_count'] != "0":
                     print(value)
                     count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
@@ -165,7 +187,9 @@ def hotMoney(dataA):
                         hotMoneyList.append(cell)
 
                 value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
-                if saveData[idx]['real_sell_count'] is not None and dataA[idx]['real_sell_count'] is not None and value > 2000000000 and saveData[idx]['real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
+                if saveData[idx]['real_sell_count'] is not None and dataA[idx][
+                    'real_sell_count'] is not None and value > 2000000000 and saveData[idx][
+                    'real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
                     count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
                     if count > 0:
                         average = value / count
@@ -382,84 +406,85 @@ def all_stocks():
         if allStocks:
             populateDatabase('temp', 'all_stocks', allStocks, 5)
 
+
 def max_Volume_buy():
-        buy10 = []
-        buy20 = []
-        buy30 = []
-        buy45 = []
-        buy60 = []
-        buy10Ind = []
-        buy20Ind = []
-        buy30Ind = []
+    buy10 = []
+    buy20 = []
+    buy30 = []
+    buy45 = []
+    buy60 = []
+    buy10Ind = []
+    buy20Ind = []
+    buy30Ind = []
 
-        for symbol in all_symbols():
-            # tick = tse.Ticker(symbol)
-            # df = tick.client_types
-                fileNameTicker = 'tickers_data/' + symbol + '.csv'
-                fileNameVolume = 'client_types_data/' + symbol + '.csv'
-                if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-                    ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-                    df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+    for symbol in all_symbols():
+        # tick = tse.Ticker(symbol)
+        # df = tick.client_types
+        fileNameTicker = 'tickers_data/' + symbol + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
-                    if not ticker.empty and ticker.size > 2:
-                        if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                            -1]:
-                            maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
-                            max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
-                            max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
-                            max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
-                            max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
-                            max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
+            if not ticker.empty and ticker.size > 2:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                    -1]:
+                    maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
+                    max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
+                    max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
+                    max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
+                    max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
+                    max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
 
-                            maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
-                            max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
-                            max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
-                            max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
+                    maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
+                    max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
+                    max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
+                    max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
 
-                            if maxNow > max10:
-                                percent = (maxNow - max10) / maxNow
-                                y10 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy10.append(y10)
+                    if maxNow > max10:
+                        percent = (maxNow - max10) / maxNow
+                        y10 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy10.append(y10)
 
-                            if maxNow > max20:
-                                percent = (maxNow - max20) / maxNow
-                                y20 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy20.append(y20)
+                    if maxNow > max20:
+                        percent = (maxNow - max20) / maxNow
+                        y20 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy20.append(y20)
 
-                            if maxNow > max30:
-                                percent = (maxNow - max30) / maxNow
-                                y30 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy30.append(y30)
+                    if maxNow > max30:
+                        percent = (maxNow - max30) / maxNow
+                        y30 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy30.append(y30)
 
-                            if maxNow > max45:
-                                percent = (maxNow - max45) / maxNow
-                                y45 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy45.append(y45)
+                    if maxNow > max45:
+                        percent = (maxNow - max45) / maxNow
+                        y45 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy45.append(y45)
 
-                            if maxNow > max60:
-                                percent = (maxNow - max60) / maxNow
-                                y60 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy60.append(y60)
+                    if maxNow > max60:
+                        percent = (maxNow - max60) / maxNow
+                        y60 = {"symbol": symbol, "vol": maxNow, "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy60.append(y60)
 
-                            if maxNowIndividual > max10Individual:
-                                percent = (maxNowIndividual - max10Individual) / maxNow
-                                y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy10Ind.append(y10Individual)
+                    if maxNowIndividual > max10Individual:
+                        percent = (maxNowIndividual - max10Individual) / maxNow
+                        y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                         "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy10Ind.append(y10Individual)
 
-                            if maxNowIndividual > max20Individual:
-                                percent = (maxNowIndividual - max20Individual) / maxNow
-                                y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy20Ind.append(y20Individual)
+                    if maxNowIndividual > max20Individual:
+                        percent = (maxNowIndividual - max20Individual) / maxNow
+                        y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                         "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy20Ind.append(y20Individual)
 
-                            if maxNowIndividual > max30Individual:
-                                percent = (maxNowIndividual - max30Individual) / maxNow
-                                y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
-                                buy30Ind.append(y30Individual)
+                    if maxNowIndividual > max30Individual:
+                        percent = (maxNowIndividual - max30Individual) / maxNow
+                        y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                         "percent": float("{:.2f}".format(round(percent, 2)))}
+                        buy30Ind.append(y30Individual)
 
-        return buy10, buy20, buy30, buy45, buy60, buy10Ind, buy20Ind, buy30Ind
+    return buy10, buy20, buy30, buy45, buy60, buy10Ind, buy20Ind, buy30Ind
 
 
 def max_Volume_sell():
@@ -526,7 +551,7 @@ def max_Volume_sell():
                         sell45.append(y45Sell)
 
                     if maxNowSell > max60Sell:
-                        percent = (maxNowSell - max60Sell)  / maxNowSell
+                        percent = (maxNowSell - max60Sell) / maxNowSell
                         y60Sell = {"symbol": symbol, "vol": maxNowSell,
                                    "percent": float("{:.2f}".format(round(percent, 2)))}
                         sell60.append(y60Sell)
@@ -624,7 +649,8 @@ def possibleQueueBuy():
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
                 if ticker['close'].iloc[-1] > ticker['adjClose'].iloc[-1]:
-                    percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[-1]
+                    percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[
+                        -1]
                     if percent > 3:
                         cell = {"symbol": symbol,
                                 "close": ticker['close'].iloc[-1],
@@ -644,7 +670,7 @@ def possibleQueueSell():
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
-                if ticker['adjClose'].iloc[-1]> ticker['close'].iloc[-1]:
+                if ticker['adjClose'].iloc[-1] > ticker['close'].iloc[-1]:
                     percent = (ticker['adjClose'].iloc[-1] - ticker['close'].iloc[-1]) * 100 / ticker['close'].iloc[-1]
                     if percent > 3:
                         cell = {"symbol": symbol,
@@ -778,11 +804,12 @@ def startServer():
     try:
         print("I'm working...")
         rt = RepeatedTimer(10, shakhesBource)
+        rt = RepeatedTimer(30, detectVolume)
+        rt = RepeatedTimer(500, timeVolume)
         rt = RepeatedTimer(1000, car)
         rt = RepeatedTimer(800, currency)
         rt = RepeatedTimer(700, digital_currency)
-        rt = RepeatedTimer(30, detectVolume)
-        rt = RepeatedTimer(1080, timeVolume)
+
         try:
             sleep(14400)
         finally:
@@ -796,17 +823,23 @@ def startServer():
         logging.exception("message")
 
 
+def clearHotMoney():
+    populateDatabase('price', 'hot_money', "", 4, True)
+
+
 def downloadCsvs():
     print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for symbol in all_symbols():
-        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False, error_bad_lines=False)
+        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
+                         error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
+        df.to_csv('client_types_data/' + symbol + '.csv')
         print(symbol)
     print("finish download csv")
     # timeVolume()
+
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
@@ -833,18 +866,18 @@ logger = logging.getLogger('urbanGUI')
 # schedule.every().monday.at("09:00").do(startServer)
 # schedule.every().tuesday.at("10:07").do(startServer)
 # schedule.every().wednesday.at("09:00").do(startServer)
+# schedule.every().at("09:00").do(clearHotMoney)
 # # schedule.every().day.at("17:00").do(downloadCsvs)
 #
 # while True:
 #     schedule.run_pending()
 #     time.sleep(5)
 
-
 # downloadOneCsv('فایرا')
 # startServer()
-# downloadCsvs()
+downloadCsvs()
 # detectVolume()
-timeVolume()
+# timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
