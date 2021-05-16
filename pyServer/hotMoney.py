@@ -862,7 +862,7 @@ logging.basicConfig(filename="log.txt",
 logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("10:31").do(startServer)
+schedule.every().sunday.at("10:34").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("10:07").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
