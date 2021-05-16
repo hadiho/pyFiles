@@ -202,7 +202,7 @@ def hotMoney(dataA):
             saveData = dataA
             if hotMoneyList:
                 print(hotMoneyList)
-                populateDatabase("price", "hot_money", hotMoneyList, 10)
+                populateDatabase("price", "hot_money", hotMoneyList, 10, False)
         except:
             logging.exception("Error")
 
@@ -390,7 +390,7 @@ def detectVolume():
                     }
             lastList.append(cell)  # (1366, "Incorrect integer value: 'None' for column 'industry_code' at row 1")
         if lastList:
-            populateDatabase('price', 'last_price', lastList, 4)
+            populateDatabase('price', 'last_price', lastList, 4, False)
 
 
 def all_stocks():
@@ -404,7 +404,7 @@ def all_stocks():
                 }
         allStocks.append(cell)
         if allStocks:
-            populateDatabase('temp', 'all_stocks', allStocks, 5)
+            populateDatabase('temp', 'all_stocks', allStocks, 5, False)
 
 
 def max_Volume_buy():
@@ -598,14 +598,14 @@ def pushMaxBuy():
     max_Individual_Volume_buy20.sort(key=itemgetter('percent'), reverse=True)
     max_Individual_Volume_buy30.sort(key=itemgetter('percent'), reverse=True)
 
-    populateDatabase("temp", "max_Volume_buyFrom10", max_Volume_buyFrom10, 1)
-    populateDatabase("temp", "max_Volume_buyFrom20", max_Volume_buyFrom20, 1)
-    populateDatabase("temp", "max_Volume_buyFrom30", max_Volume_buyFrom30, 1)
-    populateDatabase("temp", "max_Volume_buyFrom45", max_Volume_buyFrom45, 1)
-    populateDatabase("temp", "max_Volume_buyFrom60", max_Volume_buyFrom60, 1)
-    populateDatabase("temp", "max_Individual_Volume_buy10", max_Individual_Volume_buy10, 1)
-    populateDatabase("temp", "max_Individual_Volume_buy20", max_Individual_Volume_buy20, 1)
-    populateDatabase("temp", "max_Individual_Volume_buy30", max_Individual_Volume_buy30, 1)
+    populateDatabase("temp", "max_Volume_buyFrom10", max_Volume_buyFrom10, 1, False)
+    populateDatabase("temp", "max_Volume_buyFrom20", max_Volume_buyFrom20, 1, False)
+    populateDatabase("temp", "max_Volume_buyFrom30", max_Volume_buyFrom30, 1, False)
+    populateDatabase("temp", "max_Volume_buyFrom45", max_Volume_buyFrom45, 1, False)
+    populateDatabase("temp", "max_Volume_buyFrom60", max_Volume_buyFrom60, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_buy10", max_Individual_Volume_buy10, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_buy20", max_Individual_Volume_buy20, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_buy30", max_Individual_Volume_buy30, 1, False)
 
 
 def pushMaxSell():
@@ -629,14 +629,14 @@ def pushMaxSell():
     max_Individual_Volume_sell20.sort(key=itemgetter('percent'), reverse=True)
     max_Individual_Volume_sell30.sort(key=itemgetter('percent'), reverse=True)
 
-    populateDatabase("temp", "max_Volume_sellFrom10", max_Volume_sellFrom10, 1)
-    populateDatabase("temp", "max_Volume_sellFrom20", max_Volume_sellFrom20, 1)
-    populateDatabase("temp", "max_Volume_sellFrom30", max_Volume_sellFrom30, 1)
-    populateDatabase("temp", "max_Volume_sellFrom45", max_Volume_sellFrom45, 1)
-    populateDatabase("temp", "max_Volume_sellFrom60", max_Volume_sellFrom60, 1)
-    populateDatabase("temp", "max_Individual_Volume_sell10", max_Individual_Volume_sell10, 1)
-    populateDatabase("temp", "max_Individual_Volume_sell20", max_Individual_Volume_sell20, 1)
-    populateDatabase("temp", "max_Individual_Volume_sell30", max_Individual_Volume_sell30, 1)
+    populateDatabase("temp", "max_Volume_sellFrom10", max_Volume_sellFrom10, 1, False)
+    populateDatabase("temp", "max_Volume_sellFrom20", max_Volume_sellFrom20, 1, False)
+    populateDatabase("temp", "max_Volume_sellFrom30", max_Volume_sellFrom30, 1, False)
+    populateDatabase("temp", "max_Volume_sellFrom45", max_Volume_sellFrom45, 1, False)
+    populateDatabase("temp", "max_Volume_sellFrom60", max_Volume_sellFrom60, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_sell10", max_Individual_Volume_sell10, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_sell20", max_Individual_Volume_sell20, 1, False)
+    populateDatabase("temp", "max_Individual_Volume_sell30", max_Individual_Volume_sell30, 1, False)
 
 
 def possibleQueueBuy():
@@ -686,14 +686,14 @@ def pushPossibleQueueBuy():
     pushPossibleQBuy = possibleQueueBuy()
     pushPossibleQBuy.sort(key=itemgetter('percent'), reverse=True)
     if pushPossibleQBuy:
-        populateDatabase("temp", "possibleQueueBuy", pushPossibleQBuy, 2)
+        populateDatabase("temp", "possibleQueueBuy", pushPossibleQBuy, 2, False)
 
 
 def pushPossibleQueueSell():
     pushPossibleQSell = possibleQueueSell()
     pushPossibleQSell.sort(key=itemgetter('percent'), reverse=True)
     if pushPossibleQSell:
-        populateDatabase("temp", "possibleQueueSell", pushPossibleQSell, 2)
+        populateDatabase("temp", "possibleQueueSell", pushPossibleQSell, 2, False)
 
 
 def currency():
@@ -708,7 +708,7 @@ def currency():
                     "maxPrice": data["max_price"], "time": data["jalali_last_update"]}
             allCurrency.append(cell)
             if allCurrency:
-                populateDatabase('temp', 'currency', allCurrency, 6)
+                populateDatabase('temp', 'currency', allCurrency, 6, False)
 
 
 def car():
@@ -725,7 +725,7 @@ def car():
                     "market_price": data["market_price"], "last_update": data["last_update"]}
             carList.append(cell)
             if carList:
-                populateDatabase('temp', 'car', carList, 8)
+                populateDatabase('temp', 'car', carList, 8, False)
 
 
 def digital_currency():
@@ -743,7 +743,7 @@ def digital_currency():
                     "market_cap": data["market_cap"]}
             allDCurrency.append(cell)
             if allDCurrency:
-                populateDatabase('temp', 'digital_currency', allDCurrency, 7)
+                populateDatabase('temp', 'digital_currency', allDCurrency, 7, False)
 
 
 def shakhesBource():
@@ -762,7 +762,7 @@ def shakhesBource():
                 "trade_value": dataA["bourse"]["trade_value"], "trade_volume": dataA["bourse"]["trade_volume"]}
         shakhesBource.append(cell)
         if shakhesBource:
-            populateDatabase('temp', 'main_index', shakhesBource, 9)
+            populateDatabase('temp', 'main_index', shakhesBource, 9, False)
 
 
 def startDetectVolume():
@@ -862,7 +862,7 @@ logging.basicConfig(filename="log.txt",
 logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("10:12").do(startServer)
+schedule.every().sunday.at("10:17").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("10:07").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
