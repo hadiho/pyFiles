@@ -126,7 +126,7 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                     connection.commit()
                 elif tableName == "main_index":
                     with connection.cursor() as cursor:
-                        sql = "UPDATE " + tableName + " SET VALUES " + values + " WHERE 1 ;"
+                        sql = "UPDATE " + tableName + " SET " + values + " WHERE 1 ;"
                         cursor.execute("SET CHARACTER SET utf8", args=None)
                         cursor.execute(sql, args=None)
                     connection.commit()
@@ -862,7 +862,7 @@ logging.basicConfig(filename="log.txt",
 logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("10:17").do(startServer)
+schedule.every().sunday.at("10:31").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("10:07").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
