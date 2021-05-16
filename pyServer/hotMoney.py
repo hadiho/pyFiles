@@ -123,13 +123,13 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                 if tableName == "hot_money":
                     with connection.cursor() as cursor:
                         sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
-                        # cursor.execute("SET CHARACTER SET utf8", args=None)
+                        cursor.execute("SET CHARACTER SET utf8", args=None)
                         cursor.execute(sql, args=None)
                     connection.commit()
                 elif tableName == "main_index":
                     with connection.cursor() as cursor:
                         sql = "UPDATE " + tableName + " SET " + values + " WHERE 1 ;"
-                        # cursor.execute("SET CHARACTER SET utf8", args=None)
+                        cursor.execute("SET CHARACTER SET utf8", args=None)
                         cursor.execute(sql, args=None)
                     connection.commit()
                 else:
@@ -137,9 +137,10 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                         sql = "DELETE FROM " + tableName
                         cursor.execute(sql, args=None)
                     connection.commit()
-                    sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
-                    # cursor.execute("SET CHARACTER SET utf8", args=None)
-                    cursor.execute(sql, args=None)
+                    with connection.cursor() as cursor:
+                        sql = "INSERT INTO " + tableName + " VALUES " + values + ";"
+                        cursor.execute("SET CHARACTER SET utf8", args=None)
+                        cursor.execute(sql, args=None)
                     connection.commit()
 
 
