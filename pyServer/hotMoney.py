@@ -89,12 +89,14 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                 values = values + "('" + str(val["model"]) + "','" + str(val["type"]) + "','" + str(
                     val["price"]) + "','" + str(val["market_price"]) + "','" + str(val["last_update"]) + "')"
             if flag == 9:
-                values = values + "('" + str(val["state"]) + "','" + str(val["b_index"]) + "','" + str(
-                    val["index_change"]) + "','" + str(val["index_change_percent"]) + "','" \
-                         + str(val["index_h"]) + "','" + str(val["index_h_change"]) + "','" + str(
-                    val["index_h_change_percent"]) + "','" + str(val["market_value"]) \
-                         + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
-                    val["trade_volume"]) + "')"
+                # values = values + "('" + str(val["state"]) + "','" + str(val["b_index"]) + "','" + str(
+                #     val["index_change"]) + "','" + str(val["index_change_percent"]) + "','" \
+                #          + str(val["index_h"]) + "','" + str(val["index_h_change"]) + "','" + str(
+                #     val["index_h_change_percent"]) + "','" + str(val["market_value"]) \
+                #          + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
+                #     val["trade_volume"]) + "')"
+                values = "`state`=" + str(val["state"]) + ",`b_index`="+str(val["b_index"]) +",`index_change`="+str(val["index_change"])+",`index_change_percent`="+ str(val["index_change_percent"]) +",`index_h`="+ str(val["index_h"]) +",`index_h_change`="+ str(val["index_h_change"]) + ",`index_h_change_percent`="+ str(
+                    val["index_h_change_percent"]) +",`market_value`="+str(val["market_value"])+",`trade_number`="+ str(val["trade_number"]) +",`trade_value`="+ str(val["trade_value"]) +",`trade_volume`="+str(val["trade_volume"])
             if flag == 10:
                 values = values + "('" + str(val["time"]) + "','" + str(val["name"]) + "','" + str(
                     val["full_name"]) + "','" + str(val["close"]) + "','" \
@@ -862,7 +864,7 @@ logging.basicConfig(filename="log.txt",
 logger = logging.getLogger('urbanGUI')
 
 schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("10:34").do(startServer)
+schedule.every().sunday.at("10:52").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
 schedule.every().tuesday.at("10:07").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
