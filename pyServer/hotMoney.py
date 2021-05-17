@@ -848,21 +848,21 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("09:00").do(clearHotMoney)
-# # schedule.every().day.at("17:00").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(30)
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+schedule.every().day.at("09:00").do(clearHotMoney)
+# schedule.every().day.at("17:00").do(downloadCsvs)
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)
 
 # downloadOneCsv('فایرا')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
 # detectVolume()
 # timeVolume()
 # all_stocks()
