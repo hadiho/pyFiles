@@ -95,8 +95,14 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                 #     val["index_h_change_percent"]) + "','" + str(val["market_value"]) \
                 #          + "','" + str(val["trade_number"]) + "','" + str(val["trade_value"]) + "','" + str(
                 #     val["trade_volume"]) + "')"
-                values = "`state`='" + str(val["state"]) + "',`b_index`='"+str(val["b_index"]) +"',`index_change`='"+str(val["index_change"])+"',`index_change_percent`='"+ str(val["index_change_percent"]) +"',`index_h`='"+ str(val["index_h"]) +"',`index_h_change`='"+ str(val["index_h_change"]) + "',`index_h_change_percent`='"+ str(
-                    val["index_h_change_percent"]) +"',`market_value`='"+str(val["market_value"])+"',`trade_number`='"+ str(val["trade_number"]) +"',`trade_value`='"+ str(val["trade_value"]) +"',`trade_volume`='"+str(val["trade_volume"])+"'"
+                values = "`state`='" + str(val["state"]) + "',`b_index`='" + str(
+                    val["b_index"]) + "',`index_change`='" + str(
+                    val["index_change"]) + "',`index_change_percent`='" + str(
+                    val["index_change_percent"]) + "',`index_h`='" + str(val["index_h"]) + "',`index_h_change`='" + str(
+                    val["index_h_change"]) + "',`index_h_change_percent`='" + str(
+                    val["index_h_change_percent"]) + "',`market_value`='" + str(
+                    val["market_value"]) + "',`trade_number`='" + str(val["trade_number"]) + "',`trade_value`='" + str(
+                    val["trade_value"]) + "',`trade_volume`='" + str(val["trade_volume"]) + "'"
             if flag == 10:
                 values = values + "('" + str(val["time"]) + "','" + str(val["name"]) + "','" + str(
                     val["full_name"]) + "','" + str(val["close"]) + "','" \
@@ -144,8 +150,6 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                     connection.commit()
 
 
-
-
 def is_non_zero_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
 
@@ -167,42 +171,51 @@ def lastChanges():
 saveData = None
 
 
-def hotMoney(dataA):
+def hotMoney(newData):
     global saveData
     if saveData is None:
-        saveData = dataA
+        saveData = newData
     else:
         try:
             hotMoneyList = []
-            for idx, val in enumerate(dataA):
-                value = int(dataA[idx]['real_buy_value']) - int(saveData[idx]['real_buy_value'])
-                if saveData[idx]['real_buy_count'] is not None and dataA[idx][
-                    'real_buy_count'] is not None and value > 2000000000 and saveData[idx]['real_buy_count'] != "0" and \
-                        dataA[idx]['real_buy_count'] != "0":
-                    # print(value)
-                    count = int(dataA[idx]['real_buy_count']) - int(saveData[idx]['real_buy_count'])
-                    if count > 0:
-                        average = value / count
-                        cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
-                                "full_name": dataA[idx]['full_name'],
-                                "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                                "average": average, "total": value, "number": count, "attribute": 1, "type": 1}
-                        hotMoneyList.append(cell)
+            for idx, val in enumerate(newData):
 
-                value = int(dataA[idx]['real_sell_value']) - int(saveData[idx]['real_sell_value'])
-                if saveData[idx]['real_sell_count'] is not None and dataA[idx][
-                    'real_sell_count'] is not None and value > 2000000000 and saveData[idx][
-                    'real_sell_count'] != "0" and dataA[idx]['real_sell_count'] != "0":
-                    count = int(dataA[idx]['real_sell_count']) - int(saveData[idx]['real_sell_count'])
-                    if count > 0:
-                        average = value / count
-                        cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": dataA[idx]['name'],
-                                "full_name": dataA[idx]['full_name'],
-                                "close": dataA[idx]['close_price'], "percent": dataA[idx]['close_price_change_percent'],
-                                "average": average, "total": value, "number": count, "attribute": 1, "type": 2}
-                        hotMoneyList.append(cell)
+                for j, v in enumerate(saveData):
+                    if newData[idx]['name'] == saveData[j]['name']:
+                        if saveData[j]['real_buy_count'] is not None and newData[idx][
+                            'real_buy_count'] is not None and saveData[j]['real_buy_count'] != "0" and \
+                                newData[idx]['real_buy_count'] != "0":
+                            value = int(newData[idx]['real_buy_value']) - int(saveData[j]['real_buy_value'])
+                            if value > 2000000000:
+                                count = int(newData[idx]['real_buy_count']) - int(saveData[j]['real_buy_count'])
+                                if count > 0:
+                                    average = value / count
+                                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": newData[idx]['name'],
+                                            "full_name": newData[idx]['full_name'],
+                                            "close": newData[idx]['close_price'],
+                                            "percent": newData[idx]['close_price_change_percent'],
+                                            "average": average, "total": value, "number": count, "attribute": 1,
+                                            "type": 1}
+                                    hotMoneyList.append(cell)
 
-            saveData = dataA
+                        if saveData[j]['real_sell_count'] is not None and newData[idx][
+                            'real_sell_count'] is not None and saveData[j][
+                            'real_sell_count'] != "0" and newData[idx]['real_sell_count'] != "0":
+                            value = int(newData[idx]['real_sell_value']) - int(saveData[j]['real_sell_value'])
+                            if value > 2000000000:
+                                count = int(newData[idx]['real_sell_count']) - int(saveData[j]['real_sell_count'])
+                                if count > 0:
+                                    average = value / count
+                                    cell = {"time": datetime.now().strftime('%H-%M-%S'), "name": newData[idx]['name'],
+                                            "full_name": newData[idx]['full_name'],
+                                            "close": newData[idx]['close_price'],
+                                            "percent": newData[idx]['close_price_change_percent'],
+                                            "average": average, "total": value, "number": count, "attribute": 1,
+                                            "type": 2}
+                                    hotMoneyList.append(cell)
+                        break
+
+            saveData = newData
             if hotMoneyList:
                 print(hotMoneyList)
                 populateDatabase("price", "hot_money", hotMoneyList, 10, False)
@@ -340,15 +353,15 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-        if dataA[idx]['name'] == 'فایرا':
-            readCsv(dataA[idx])
+        readCsv(dataA[idx])
+        # if dataA[idx]['name'] == 'فایرا':
 
 
 def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
         hotMoney(dataA)
-        # historyVolume(dataA)
+        historyVolume(dataA)
         lastList = []
         for data in dataA:
             cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
@@ -421,8 +434,6 @@ def max_Volume_buy():
     buy30Ind = []
 
     for symbol in all_symbols():
-        # tick = tse.Ticker(symbol)
-        # df = tick.client_types
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
@@ -720,15 +731,19 @@ def car():
     print("car ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-        # print(dataA)
 
         carList = []
         for data in dataA:
-            cell = {"model": data["model"], "type": data["type"], "price": data["price"],
-                    "market_price": data["market_price"], "last_update": data["last_update"]}
-            carList.append(cell)
-            if carList:
-                populateDatabase('temp', 'car', carList, 8, False)
+            check = False
+            for i in carList:
+                if i["model"] == data["model"]:
+                    check = True
+            if not check:
+                cell = {"model": data["model"], "type": data["type"], "price": data["price"],
+                        "market_price": data["market_price"], "last_update": data["last_update"]}
+                carList.append(cell)
+        if carList:
+            populateDatabase('temp', 'car', carList, 8, False)
 
 
 def digital_currency():
@@ -756,25 +771,18 @@ def shakhesBource():
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
         shakhesBource = []
-        cell = {"state": dataA["bourse"]["state"], "b_index": dataA["bourse"]["index"],
-                "index_change": dataA["bourse"]["index_change"],
-                "index_change_percent": dataA["bourse"]["index_change_percent"], "index_h": dataA["bourse"]["index_h"],
-                "index_h_change": dataA["bourse"]["index_h_change"],
-                "index_h_change_percent": dataA["bourse"]["index_h_change_percent"]
-            , "market_value": dataA["bourse"]["market_value"], "trade_number": dataA["bourse"]["trade_number"],
-                "trade_value": dataA["bourse"]["trade_value"], "trade_volume": dataA["bourse"]["trade_volume"]}
-        shakhesBource.append(cell)
-        if shakhesBource:
-            populateDatabase('temp', 'main_index', shakhesBource, 9, False)
-
-
-def startDetectVolume():
-    print("start detectVolume...")
-    rt = RepeatedTimer(10, detectVolume)
-    try:
-        sleep(14400)
-    finally:
-        rt.stop()
+        if dataA is not None:
+            cell = {"state": dataA["bourse"]["state"], "b_index": dataA["bourse"]["index"],
+                    "index_change": dataA["bourse"]["index_change"],
+                    "index_change_percent": dataA["bourse"]["index_change_percent"],
+                    "index_h": dataA["bourse"]["index_h"],
+                    "index_h_change": dataA["bourse"]["index_h_change"],
+                    "index_h_change_percent": dataA["bourse"]["index_h_change_percent"],
+                    "market_value": dataA["bourse"]["market_value"], "trade_number": dataA["bourse"]["trade_number"],
+                    "trade_value": dataA["bourse"]["trade_value"], "trade_volume": dataA["bourse"]["trade_volume"]}
+            shakhesBource.append(cell)
+            if shakhesBource:
+                populateDatabase('temp', 'main_index', shakhesBource, 9, False)
 
 
 def timeVolume():
@@ -784,29 +792,10 @@ def timeVolume():
     possibleQueueSell()
 
 
-def startDateVolume():
-    print("start dateVolume...")
-    rt = RepeatedTimer(1800, timeVolume)
-    try:
-        sleep(14400)
-    finally:
-        rt.stop()
-
-
-def startShakhes():
-    print("start shakhesBource...")
-    rt = RepeatedTimer(10, shakhesBource)
-    rt = RepeatedTimer(30, car)
-    try:
-        sleep(14400)
-    finally:
-        rt.stop()
-
-
 def startServer():
     try:
         print("I'm working...")
-        rt = RepeatedTimer(10, shakhesBource)
+        rt = RepeatedTimer(15, shakhesBource)
         rt = RepeatedTimer(30, detectVolume)
         rt = RepeatedTimer(500, timeVolume)
         rt = RepeatedTimer(1000, car)
@@ -817,11 +806,6 @@ def startServer():
             sleep(14400)
         finally:
             rt.stop()
-        # startShakhes()
-        # startDetectVolume()
-        # startDateVolume()
-        # car()
-        # currency()
     except ZeroDivisionError:
         logging.exception("message")
 
@@ -841,7 +825,7 @@ def downloadCsvs():
         df.to_csv('client_types_data/' + symbol + '.csv')
         print(symbol)
     print("finish download csv")
-    # timeVolume()
+    timeVolume()
 
 
 def downloadOneCsv(symbol):
@@ -864,21 +848,21 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
-schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("09:00").do(clearHotMoney)
-# schedule.every().day.at("17:00").do(downloadCsvs)
-
-while True:
-    schedule.run_pending()
-    time.sleep(5)
+# schedule.every().saturday.at("09:00").do(startServer)
+# schedule.every().sunday.at("09:00").do(startServer)
+# schedule.every().monday.at("09:00").do(startServer)
+# schedule.every().tuesday.at("09:00").do(startServer)
+# schedule.every().wednesday.at("09:00").do(startServer)
+# schedule.every().day.at("09:00").do(clearHotMoney)
+# # schedule.every().day.at("17:00").do(downloadCsvs)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(30)
 
 # downloadOneCsv('فایرا')
 # startServer()
-# downloadCsvs()
+downloadCsvs()
 # detectVolume()
 # timeVolume()
 # all_stocks()
