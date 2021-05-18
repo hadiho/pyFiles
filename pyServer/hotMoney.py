@@ -157,7 +157,7 @@ def is_non_zero_file(fpath):
 def lastChanges():
     try:
         resp = requests.get(
-            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')  # 6e6671c1fcc42c94bf448fe7d880fa88&all&type=0')
+            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')
         print("lastChanges ", resp.status_code)
         if resp.status_code == 200:
             data = json.loads(resp.text)
@@ -749,10 +749,8 @@ def car():
 def digital_currency():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&crypto_v2=all')
-    # print("digital_currency ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-        # print(dataA)
 
         allDCurrency = []
         for data in dataA["data"]:
@@ -859,7 +857,6 @@ schedule.every().day.at("09:00").do(clearHotMoney)
 while True:
     schedule.run_pending()
     time.sleep(30)
-
 
 # downloadOneCsv('فایرا')
 # startServer()
