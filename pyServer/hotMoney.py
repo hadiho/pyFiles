@@ -437,8 +437,8 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
@@ -515,13 +515,13 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
             df = df.astype({"individual_buy_vol": int})
             df = df.astype({"individual_buy_count": int})
             df = df.astype({"corporate_buy_vol": int})
             df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"individual_ownership_change": int})
+            # df = df.astype({"individual_ownership_change": int})
             df = df.astype({"corporate_sell_vol": int})
             df = df.astype({"individual_sell_vol": int})
 
@@ -820,7 +820,7 @@ def downloadCsvs():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv')
+        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
         print(symbol)
     print("finish download csv")
     timeVolume()
@@ -846,21 +846,21 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
-schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("09:00").do(clearHotMoney)
-# schedule.every().day.at("17:00").do(downloadCsvs)
+# schedule.every().saturday.at("09:00").do(startServer)
+# schedule.every().sunday.at("09:00").do(startServer)
+# schedule.every().monday.at("09:00").do(startServer)
+# schedule.every().tuesday.at("09:00").do(startServer)
+# schedule.every().wednesday.at("09:00").do(startServer)
+# schedule.every().day.at("09:00").do(clearHotMoney)
+# # schedule.every().day.at("17:00").do(downloadCsvs)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(30)
 
-while True:
-    schedule.run_pending()
-    time.sleep(30)
-
-# downloadOneCsv('فایرا')
+# downloadOneCsv('فملی')
 # startServer()
-# downloadCsvs()
+downloadCsvs()
 # detectVolume()
 # timeVolume()
 # all_stocks()

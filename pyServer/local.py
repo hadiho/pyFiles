@@ -157,7 +157,7 @@ def is_non_zero_file(fpath):
 def lastChanges():
     try:
         resp = requests.get(
-            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')  # 6e6671c1fcc42c94bf448fe7d880fa88&all&type=0')
+            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')
         print("lastChanges ", resp.status_code)
         if resp.status_code == 200:
             data = json.loads(resp.text)
@@ -167,7 +167,10 @@ def lastChanges():
 
     return None
 
+
 saveData = None
+
+
 def hotMoney(newData):
     global saveData
     if saveData is None:
@@ -354,7 +357,6 @@ def historyVolume(dataA):
         # if dataA[idx]['name'] == 'فایرا':
 
 
-
 def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
@@ -435,8 +437,8 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
@@ -513,13 +515,13 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
             df = df.astype({"individual_buy_vol": int})
             df = df.astype({"individual_buy_count": int})
             df = df.astype({"corporate_buy_vol": int})
             df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"individual_ownership_change": int})
+            # df = df.astype({"individual_ownership_change": int})
             df = df.astype({"corporate_sell_vol": int})
             df = df.astype({"individual_sell_vol": int})
 
@@ -747,10 +749,8 @@ def car():
 def digital_currency():
     resp = requests.get(
         'https://sourcearena.ir/api/?token=' + token + '&crypto_v2=all')
-    # print("digital_currency ", resp.status_code)
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
-        # print(dataA)
 
         allDCurrency = []
         for data in dataA["data"]:
@@ -820,10 +820,10 @@ def downloadCsvs():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv')
+        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
         print(symbol)
     print("finish download csv")
-    # timeVolume()
+    timeVolume()
 
 
 def downloadOneCsv(symbol):
@@ -858,10 +858,10 @@ logger = logging.getLogger('urbanGUI')
 #     schedule.run_pending()
 #     time.sleep(30)
 
-# downloadOneCsv('فایرا')
+downloadOneCsv('فملی')
 # startServer()
 # downloadCsvs()
-detectVolume()
+# detectVolume()
 # timeVolume()
 # all_stocks()
 # print(volumeChanges())
