@@ -437,8 +437,8 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
@@ -515,8 +515,8 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             df = df.astype({"individual_buy_vol": int})
             df = df.astype({"individual_buy_count": int})
             df = df.astype({"corporate_buy_vol": int})
@@ -860,9 +860,9 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('فملی')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
