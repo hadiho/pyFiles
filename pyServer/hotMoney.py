@@ -437,8 +437,10 @@ def max_Volume_buy():
     buy30Ind = []
 
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = symbol.replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -521,8 +523,10 @@ def max_Volume_sell():
     sell30Ind = []
 
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = symbol.replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -664,8 +668,10 @@ def pushMaxSell():
 def possibleQueueBuy():
     possibleBuy = []
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = symbol.replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -686,8 +692,10 @@ def possibleQueueBuy():
 def possibleQueueSell():
     possibleSell = []
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = symbol.replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
