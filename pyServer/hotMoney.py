@@ -850,7 +850,7 @@ def downloadCsvs():
 def clear():
     for name in os.listdir('client_types_data/'):
         if os.path.isfile(os.path.join('client_types_data/', name)):
-            os.rename(name+'.csv', renameSymbol(name)+'.csv')
+            os.rename(name, renameSymbol(name))
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
