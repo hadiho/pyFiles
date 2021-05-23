@@ -833,16 +833,24 @@ def downloadCsvs():
     print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
+    for name in os.listdir('client_types_data/'):
+        if os.path.isfile(os.path.join('client_types_data/', name)):
+            renameSymbol(name)
+
     for symbol in all_symbols():
-        symbol1 = renameSymbol(symbol)
-        df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
+        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
+        symbol1 = renameSymbol(symbol)
         df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
         print(symbol)
     print("finish download csv")
     timeVolume()
 
+def clear():
+    for name in os.listdir('client_types_data/'):
+        if os.path.isfile(os.path.join('client_types_data/', name)):
+            renameSymbol(name)
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
@@ -879,7 +887,8 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('فملی')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
+clear()
 # detectVolume()
 # timeVolume()
 # all_stocks()
