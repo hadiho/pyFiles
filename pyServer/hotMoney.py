@@ -854,6 +854,7 @@ def clear():
             new_file = os.path.join("client_types_data/", renameSymbol(name))
             os.rename(old_file, new_file)
 
+
 def downloadOneCsv(symbol):
     print("to download Csv ...")
     tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
