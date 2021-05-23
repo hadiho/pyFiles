@@ -881,6 +881,7 @@ logger = logging.getLogger('urbanGUI')
 # downloadOneCsv('فملی')
 # startServer()
 downloadCsvs()
+
 # detectVolume()
 # timeVolume()
 # all_stocks()
