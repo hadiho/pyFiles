@@ -833,9 +833,7 @@ def downloadCsvs():
     print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
-    for name in os.listdir('client_types_data/'):
-        if os.path.isfile(os.path.join('client_types_data/', name)):
-            os.rename(name+'.csv', renameSymbol(name)+'.csv')
+    clear()
 
     for symbol in all_symbols():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
@@ -877,22 +875,22 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("09:00").do(clearHotMoney)
-# # schedule.every().day.at("17:00").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(30)
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+schedule.every().day.at("09:00").do(clearHotMoney)
+schedule.every().day.at("08:00").do(downloadCsvs)
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)
 
 # downloadOneCsv('فملی')
 # startServer()
 # downloadCsvs()
-clear()
+# clear()
 # detectVolume()
 # timeVolume()
 # all_stocks()
