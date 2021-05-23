@@ -112,9 +112,9 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
 
     # print(values)
     if len(table_list) > 0 or clear:
-        connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
+        connection = pymysql.connect(host='localhost',  # 194.5.175.58   localhost
                                      user='root',
-                                     password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
+                                     password='root',  # Hadi2150008140@$&!   root
                                      database=dbName,
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
@@ -152,6 +152,12 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
 
 def is_non_zero_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
+
+
+def renameSymbol(symbol):
+    symbol1 = symbol.replace("ك", "ک")
+    symbol1 = symbol1.replace("ي", "ی")
+    return symbol1
 
 
 def lastChanges():
@@ -236,10 +242,9 @@ def appendNewLineToCsv(file_name, list_of_elem, isUpdate):
 
 def readCsv(json):
     try:
-        symbol1 = json['name'].replace("ك", "ک")
-        symbol1 = symbol1.replace("ي", "ی")
-        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
+        symbol = renameSymbol(json['name'])
+        fileNameTicker = 'tickers_data/' + symbol + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol + '.csv'
 
         row_contents = [datetime.now().strftime('%Y-%m-%d'), json['yesterday_price'], json['highest_price'],
                         json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
@@ -437,8 +442,9 @@ def max_Volume_buy():
     buy30Ind = []
 
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = renameSymbol(symbol)
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -521,8 +527,9 @@ def max_Volume_sell():
     sell30Ind = []
 
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = renameSymbol(symbol)
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -664,8 +671,9 @@ def pushMaxSell():
 def possibleQueueBuy():
     possibleBuy = []
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = renameSymbol(symbol)
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -686,8 +694,9 @@ def possibleQueueBuy():
 def possibleQueueSell():
     possibleSell = []
     for symbol in all_symbols():
-        fileNameTicker = 'tickers_data/' + symbol + '.csv'
-        fileNameVolume = 'client_types_data/' + symbol + '.csv'
+        symbol1 = renameSymbol(symbol)
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
@@ -825,11 +834,10 @@ def downloadCsvs():
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for symbol in all_symbols():
-        df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
+        symbol1 = renameSymbol(symbol)
+        df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        symbol1 = symbol.replace("ك", "ک")
-        symbol1 = symbol1.replace("ي", "ی")
         df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
         print(symbol)
     print("finish download csv")
@@ -840,10 +848,9 @@ def downloadOneCsv(symbol):
     print("to download Csv ...")
     tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
-    df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
+    symbol1 = renameSymbol(symbol)
+    df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                      error_bad_lines=False)
-    symbol1 = symbol.replace("ك", "ک")
-    symbol1 = symbol1.replace("ي", "ی")
     df = df.sort_values(by='date', ascending=True)
     df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
     print(symbol)
@@ -872,9 +879,9 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('فملی')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
