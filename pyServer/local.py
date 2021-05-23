@@ -843,6 +843,10 @@ def downloadCsvs():
     print("finish download csv")
     timeVolume()
 
+def clear():
+    for name in os.listdir('client_types_data/'):
+        if os.path.isfile(os.path.join('client_types_data/', name)):
+            renameSymbol(name)
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
@@ -881,7 +885,8 @@ logger = logging.getLogger('urbanGUI')
 # startServer()
 # downloadCsvs()
 # detectVolume()
-timeVolume()
+# timeVolume()
+clear()
 # all_stocks()
 # print(volumeChanges())
 # currency()

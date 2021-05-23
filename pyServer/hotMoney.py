@@ -835,7 +835,7 @@ def downloadCsvs():
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
     for name in os.listdir('client_types_data/'):
         if os.path.isfile(os.path.join('client_types_data/', name)):
-            renameSymbol(name)
+            os.rename(name+'.csv', renameSymbol(name)+'.csv')
 
     for symbol in all_symbols():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
@@ -850,7 +850,7 @@ def downloadCsvs():
 def clear():
     for name in os.listdir('client_types_data/'):
         if os.path.isfile(os.path.join('client_types_data/', name)):
-            renameSymbol(name)
+            os.rename(name+'.csv', renameSymbol(name)+'.csv')
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
