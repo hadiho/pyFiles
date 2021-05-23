@@ -442,21 +442,27 @@ def max_Volume_buy():
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            df = df.astype({"individual_buy_vol": int})
+            df = df.astype({"individual_buy_count": int})
+            df = df.astype({"corporate_buy_vol": int})
+            df = df.astype({"corporate_buy_count": int})
+            df = df.astype({"corporate_sell_vol": int})
+            df = df.astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
                     -1]:
                     maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
-                    max10 = int(max(int(df['individual_buy_vol'][-10:-1]) + int(df['corporate_buy_vol'][-10:-1])))
-                    max20 = int(max(int(df['individual_buy_vol'][-20:-1]) + int(df['corporate_buy_vol'][-20:-1])))
-                    max30 = int(max(int(df['individual_buy_vol'][-30:-1]) + int(df['corporate_buy_vol'][-30:-1])))
-                    max45 = int(max(int(df['individual_buy_vol'][-45:-1]) + int(df['corporate_buy_vol'][-45:-1])))
-                    max60 = int(max(int(df['individual_buy_vol'][-60:-1]) + int(df['corporate_buy_vol'][-60:-1])))
+                    max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
+                    max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
+                    max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
+                    max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
+                    max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
 
                     maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
-                    max10Individual = int(max(int(df['individual_buy_vol'][-10:-1])))
-                    max20Individual = int(max(int(df['individual_buy_vol'][-20:-1])))
-                    max30Individual = int(max(int(df['individual_buy_vol'][-30:-1])))
+                    max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
+                    max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
+                    max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
 
                     if maxNow > max10:
                         percent = (maxNow - max10) / maxNow
@@ -531,16 +537,16 @@ def max_Volume_sell():
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
                     -1]:
                     maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
-                    max10Sell = int(max(int(df['individual_sell_vol'][-10:-1]) + int(df['corporate_sell_vol'][-10:-1])))
-                    max20Sell = int(max(int(df['individual_sell_vol'][-20:-1]) + int(df['corporate_sell_vol'][-20:-1])))
-                    max30Sell = int(max(int(df['individual_sell_vol'][-30:-1]) + int(df['corporate_sell_vol'][-30:-1])))
-                    max45Sell = int(max(int(df['individual_sell_vol'][-45:-1]) + int(df['corporate_sell_vol'][-45:-1])))
-                    max60Sell = int(max(int(df['individual_sell_vol'][-60:-1]) + int(df['corporate_sell_vol'][-60:-1])))
+                    max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
+                    max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
+                    max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
+                    max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
+                    max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
 
                     maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
-                    max10IndividualSell = int(max(int(df['individual_sell_vol'][-10:-1])))
-                    max20IndividualSell = int(max(int(df['individual_sell_vol'][-20:-1])))
-                    max30IndividualSell = int(max(int(df['individual_sell_vol'][-30:-1])))
+                    max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
+                    max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
+                    max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
 
                     if maxNowSell > max10Sell:
                         percent = (maxNowSell - max10Sell) / maxNowSell
@@ -852,21 +858,21 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
-schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("09:00").do(clearHotMoney)
-# schedule.every().day.at("17:00").do(downloadCsvs)
-
-while True:
-    schedule.run_pending()
-    time.sleep(30)
+# schedule.every().saturday.at("09:00").do(startServer)
+# schedule.every().sunday.at("09:00").do(startServer)
+# schedule.every().monday.at("09:00").do(startServer)
+# schedule.every().tuesday.at("09:00").do(startServer)
+# schedule.every().wednesday.at("09:00").do(startServer)
+# schedule.every().day.at("09:00").do(clearHotMoney)
+# # schedule.every().day.at("17:00").do(downloadCsvs)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(30)
 
 # downloadOneCsv('فملی')
 # startServer()
-# downloadCsvs()
+downloadCsvs()
 # detectVolume()
 # timeVolume()
 # all_stocks()
