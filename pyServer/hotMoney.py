@@ -855,6 +855,7 @@ def clear():
             os.rename(old_file, new_file)
 
 
+
 def downloadOneCsv(symbol):
     print("to download Csv ...")
     tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
