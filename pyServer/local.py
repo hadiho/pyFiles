@@ -112,9 +112,9 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
 
     # print(values)
     if len(table_list) > 0 or clear:
-        connection = pymysql.connect(host='localhost',  # 194.5.175.58   localhost
+        connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                      user='root',
-                                     password='root',  # Hadi2150008140@$&!   root
+                                     password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
                                      database=dbName,
                                      port=3306,
                                      cursorclass=pymysql.cursors.DictCursor)
@@ -236,8 +236,10 @@ def appendNewLineToCsv(file_name, list_of_elem, isUpdate):
 
 def readCsv(json):
     try:
-        fileNameTicker = 'tickers_data/' + json['name'] + '.csv'
-        fileNameVolume = 'client_types_data/' + json['name'] + '.csv'
+        symbol1 = json['name'].replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
+        fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
 
         row_contents = [datetime.now().strftime('%Y-%m-%d'), json['yesterday_price'], json['highest_price'],
                         json['lowest_price'], json['close_price'], json['trade_value'], json['trade_volume'],
@@ -364,47 +366,48 @@ def detectVolume():
         historyVolume(dataA)
         lastList = []
         for data in dataA:
-            cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
-                    "namad_code": data['namad_code'], "industry_code": data['industry_code'],
-                    "industry": data['industry'], "state": data['state'],
-                    "full_name": data['full_name'],
-                    "first_price": data['first_price'], "yesterday_price": data['yesterday_price'],
-                    "close_price": data['close_price'],
-                    "close_price_change": data['close_price_change'],
-                    "close_price_change_percent": str(data['close_price_change_percent']).replace("%", ""),
-                    "final_price": data['final_price'],
-                    "final_price_change": data['final_price_change'],
-                    "final_price_change_percent": str(data['final_price_change_percent']).replace("%", ""),
-                    "eps": data['eps'],
-                    "free_float": data['free_float'], "highest_price": data['highest_price'],
-                    "lowest_price": data['lowest_price'],
-                    "daily_price_high": data['daily_price_high'], "daily_price_low": data['daily_price_low'],
-                    "P:E": data['P:E'],
-                    "trade_number": data['trade_number'], "trade_volume": data['trade_volume'],
-                    "trade_value": data['trade_value'],
-                    "all_stocks": data['all_stocks'], "basis_volume": data['basis_volume'],
-                    "real_buy_volume": data['real_buy_volume'],
-                    "co_buy_volume": data['co_buy_volume'], "real_sell_volume": data['real_sell_volume'],
-                    "co_sell_volume": data['co_sell_volume'], "real_buy_value": data['real_buy_value'],
-                    "co_buy_value": data['co_buy_value'], "real_sell_value": data['real_sell_value'],
-                    "co_sell_value": data['co_sell_value'], "real_buy_count": data['real_buy_count'],
-                    "co_buy_count": data['co_buy_count'], "real_sell_count": data['real_sell_count'],
-                    "co_sell_count": data['co_sell_count'],
-                    "1_sell_count": data['1_sell_count'], "2_sell_count": data['2_sell_count'],
-                    "3_sell_count": data['3_sell_count'],
-                    "1_buy_count": data['1_buy_count'], "2_buy_count": data['2_buy_count'],
-                    "3_buy_count": data['3_buy_count'], "1_sell_price": data['1_sell_price'],
-                    "2_sell_price": data['2_sell_price'],
-                    "3_sell_price": data['3_sell_price'],
-                    "1_buy_price": data['1_buy_price'],
-                    "2_buy_price": data['2_buy_price'], "3_buy_price": data['3_buy_price'],
-                    "1_sell_volume": data['1_sell_volume'],
-                    "2_sell_volume": data['2_sell_volume'], "3_sell_volume": data['3_sell_volume'],
-                    "1_buy_volume": data['1_buy_volume'],
-                    "2_buy_volume": data['2_buy_volume'], "3_buy_volume": data['3_buy_volume'],
-                    "market_value": data['market_value'],
-                    }
-            lastList.append(cell)  # (1366, "Incorrect integer value: 'None' for column 'industry_code' at row 1")
+            if data['industry_code'] is not None:
+                cell = {"name": data['name'], "market": data['market'], "instance_code": data['instance_code'],
+                        "namad_code": data['namad_code'], "industry_code": data['industry_code'],
+                        "industry": data['industry'], "state": data['state'],
+                        "full_name": data['full_name'],
+                        "first_price": data['first_price'], "yesterday_price": data['yesterday_price'],
+                        "close_price": data['close_price'],
+                        "close_price_change": data['close_price_change'],
+                        "close_price_change_percent": str(data['close_price_change_percent']).replace("%", ""),
+                        "final_price": data['final_price'],
+                        "final_price_change": data['final_price_change'],
+                        "final_price_change_percent": str(data['final_price_change_percent']).replace("%", ""),
+                        "eps": data['eps'],
+                        "free_float": data['free_float'], "highest_price": data['highest_price'],
+                        "lowest_price": data['lowest_price'],
+                        "daily_price_high": data['daily_price_high'], "daily_price_low": data['daily_price_low'],
+                        "P:E": data['P:E'],
+                        "trade_number": data['trade_number'], "trade_volume": data['trade_volume'],
+                        "trade_value": data['trade_value'],
+                        "all_stocks": data['all_stocks'], "basis_volume": data['basis_volume'],
+                        "real_buy_volume": data['real_buy_volume'],
+                        "co_buy_volume": data['co_buy_volume'], "real_sell_volume": data['real_sell_volume'],
+                        "co_sell_volume": data['co_sell_volume'], "real_buy_value": data['real_buy_value'],
+                        "co_buy_value": data['co_buy_value'], "real_sell_value": data['real_sell_value'],
+                        "co_sell_value": data['co_sell_value'], "real_buy_count": data['real_buy_count'],
+                        "co_buy_count": data['co_buy_count'], "real_sell_count": data['real_sell_count'],
+                        "co_sell_count": data['co_sell_count'],
+                        "1_sell_count": data['1_sell_count'], "2_sell_count": data['2_sell_count'],
+                        "3_sell_count": data['3_sell_count'],
+                        "1_buy_count": data['1_buy_count'], "2_buy_count": data['2_buy_count'],
+                        "3_buy_count": data['3_buy_count'], "1_sell_price": data['1_sell_price'],
+                        "2_sell_price": data['2_sell_price'],
+                        "3_sell_price": data['3_sell_price'],
+                        "1_buy_price": data['1_buy_price'],
+                        "2_buy_price": data['2_buy_price'], "3_buy_price": data['3_buy_price'],
+                        "1_sell_volume": data['1_sell_volume'],
+                        "2_sell_volume": data['2_sell_volume'], "3_sell_volume": data['3_sell_volume'],
+                        "1_buy_volume": data['1_buy_volume'],
+                        "2_buy_volume": data['2_buy_volume'], "3_buy_volume": data['3_buy_volume'],
+                        "market_value": data['market_value'],
+                        }
+                lastList.append(cell)
         if lastList:
             populateDatabase('price', 'last_price', lastList, 4, False)
 
@@ -437,23 +440,23 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
                     -1]:
                     maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
-                    max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
-                    max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
-                    max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
-                    max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
-                    max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
+                    max10 = int(max(int(df['individual_buy_vol'][-10:-1]) + int(df['corporate_buy_vol'][-10:-1])))
+                    max20 = int(max(int(df['individual_buy_vol'][-20:-1]) + int(df['corporate_buy_vol'][-20:-1])))
+                    max30 = int(max(int(df['individual_buy_vol'][-30:-1]) + int(df['corporate_buy_vol'][-30:-1])))
+                    max45 = int(max(int(df['individual_buy_vol'][-45:-1]) + int(df['corporate_buy_vol'][-45:-1])))
+                    max60 = int(max(int(df['individual_buy_vol'][-60:-1]) + int(df['corporate_buy_vol'][-60:-1])))
 
                     maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
-                    max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
-                    max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
-                    max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
+                    max10Individual = int(max(int(df['individual_buy_vol'][-10:-1])))
+                    max20Individual = int(max(int(df['individual_buy_vol'][-20:-1])))
+                    max30Individual = int(max(int(df['individual_buy_vol'][-30:-1])))
 
                     if maxNow > max10:
                         percent = (maxNow - max10) / maxNow
@@ -515,13 +518,12 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol + '.csv'
         fileNameVolume = 'client_types_data/' + symbol + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False, delim_whitespace=True)
+            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             df = df.astype({"individual_buy_vol": int})
             df = df.astype({"individual_buy_count": int})
             df = df.astype({"corporate_buy_vol": int})
             df = df.astype({"corporate_buy_count": int})
-            # df = df.astype({"individual_ownership_change": int})
             df = df.astype({"corporate_sell_vol": int})
             df = df.astype({"individual_sell_vol": int})
 
@@ -529,16 +531,16 @@ def max_Volume_sell():
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
                     -1]:
                     maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
-                    max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
-                    max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
-                    max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
-                    max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
-                    max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
+                    max10Sell = int(max(int(df['individual_sell_vol'][-10:-1]) + int(df['corporate_sell_vol'][-10:-1])))
+                    max20Sell = int(max(int(df['individual_sell_vol'][-20:-1]) + int(df['corporate_sell_vol'][-20:-1])))
+                    max30Sell = int(max(int(df['individual_sell_vol'][-30:-1]) + int(df['corporate_sell_vol'][-30:-1])))
+                    max45Sell = int(max(int(df['individual_sell_vol'][-45:-1]) + int(df['corporate_sell_vol'][-45:-1])))
+                    max60Sell = int(max(int(df['individual_sell_vol'][-60:-1]) + int(df['corporate_sell_vol'][-60:-1])))
 
                     maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
-                    max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
-                    max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
-                    max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
+                    max10IndividualSell = int(max(int(df['individual_sell_vol'][-10:-1])))
+                    max20IndividualSell = int(max(int(df['individual_sell_vol'][-20:-1])))
+                    max30IndividualSell = int(max(int(df['individual_sell_vol'][-30:-1])))
 
                     if maxNowSell > max10Sell:
                         percent = (maxNowSell - max10Sell) / maxNowSell
@@ -820,7 +822,9 @@ def downloadCsvs():
         df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
-        df.to_csv('client_types_data/' + symbol + '.csv', index=False)
+        symbol1 = symbol.replace("ك", "ک")
+        symbol1 = symbol1.replace("ي", "ی")
+        df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
         print(symbol)
     print("finish download csv")
     timeVolume()
@@ -832,8 +836,10 @@ def downloadOneCsv(symbol):
     records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
     df = pd.read_csv('client_types_data/' + symbol + '.csv', index_col=False, low_memory=False,
                      error_bad_lines=False)
+    symbol1 = symbol.replace("ك", "ک")
+    symbol1 = symbol1.replace("ي", "ی")
     df = df.sort_values(by='date', ascending=True)
-    df.to_csv('client_types_data/' + symbol + '.csv', index=False)
+    df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
     print(symbol)
     print("finish download csv")
 
@@ -846,19 +852,19 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("09:00").do(clearHotMoney)
-# # schedule.every().day.at("17:00").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(30)
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+schedule.every().day.at("09:00").do(clearHotMoney)
+# schedule.every().day.at("17:00").do(downloadCsvs)
 
-downloadOneCsv('فملی')
+while True:
+    schedule.run_pending()
+    time.sleep(30)
+
+# downloadOneCsv('فملی')
 # startServer()
 # downloadCsvs()
 # detectVolume()
