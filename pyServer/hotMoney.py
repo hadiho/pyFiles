@@ -852,7 +852,16 @@ def clear():
             new_file = os.path.join("client_types_data/", renameSymbol(name))
             os.rename(old_file, new_file)
 
-
+def ss():
+    for symbol in all_symbols():
+        symbol1 = renameSymbol(symbol)
+        df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
+                         error_bad_lines=False)
+        df = df.sort_values(by='date', ascending=True)
+        df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
+        print(symbol)
+    print("finish download csv")
+    timeVolume()
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
@@ -889,7 +898,8 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('فملی')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
+ss()
 # clear()
 # detectVolume()
 # timeVolume()
