@@ -310,7 +310,7 @@ def readCsv(json):
                 # print("exist create ticker row")
 
             if os.path.isfile(fileNameVolume) and is_non_zero_file(fileNameVolume):
-                # print(fileNameVolume)
+                print(fileNameVolume)
                 df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
                 now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
@@ -448,12 +448,12 @@ def max_Volume_buy():
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            df = df.astype({"individual_buy_vol": int})
-            df = df.astype({"individual_buy_count": int})
-            df = df.astype({"corporate_buy_vol": int})
-            df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"corporate_sell_vol": int})
-            df = df.astype({"individual_sell_vol": int})
+            df = df.fillna(0).astype({"individual_buy_vol": int})
+            df = df.fillna(0).astype({"individual_buy_count": int})
+            df = df.fillna(0).astype({"corporate_buy_vol": int})
+            df = df.fillna(0).astype({"corporate_buy_count": int})
+            df = df.fillna(0).astype({"corporate_sell_vol": int})
+            df = df.fillna(0).astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
@@ -531,77 +531,82 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
         fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            df = df.astype({"individual_buy_vol": int})
-            df = df.astype({"individual_buy_count": int})
-            df = df.astype({"corporate_buy_vol": int})
-            df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"corporate_sell_vol": int})
-            df = df.astype({"individual_sell_vol": int})
+            try:
 
-            if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
-                    maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
-                    max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
-                    max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
-                    max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
-                    max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
-                    max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
+                ticker = pd.read_csv(fileNameTicker, index_col=False)
+                df = pd.read_csv(fileNameVolume, index_col=False)
+                df = df.fillna(0).astype({"individual_buy_vol": int})
+                df = df.fillna(0).astype({"individual_buy_count": int})
+                df = df.fillna(0).astype({"corporate_buy_vol": int})
+                df = df.fillna(0).astype({"corporate_buy_count": int})
+                df = df.fillna(0).astype({"corporate_sell_vol": int})
+                df = df.fillna(0).astype({"individual_sell_vol": int})
 
-                    maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
-                    max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
-                    max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
-                    max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
+                if not ticker.empty and ticker.size > 2:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                        -1]:
+                        maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
+                        max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
+                        max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
+                        max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
+                        max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
+                        max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
 
-                    if maxNowSell > max10Sell:
-                        percent = (maxNowSell - max10Sell) / maxNowSell
-                        y10Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell10.append(y10Sell)
+                        maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
+                        max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
+                        max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
+                        max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
 
-                    if maxNowSell > max20Sell:
-                        percent = (maxNowSell - max20Sell) / maxNowSell
-                        y20Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell20.append(y20Sell)
+                        if maxNowSell > max10Sell:
+                            percent = (maxNowSell - max10Sell) / maxNowSell
+                            y10Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell10.append(y10Sell)
 
-                    if maxNowSell > max30Sell:
-                        percent = (maxNowSell - max30Sell) / maxNowSell
-                        y30Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell30.append(y30Sell)
+                        if maxNowSell > max20Sell:
+                            percent = (maxNowSell - max20Sell) / maxNowSell
+                            y20Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell20.append(y20Sell)
 
-                    if maxNowSell > max45Sell:
-                        percent = (maxNowSell - max45Sell) / maxNowSell
-                        y45Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell45.append(y45Sell)
+                        if maxNowSell > max30Sell:
+                            percent = (maxNowSell - max30Sell) / maxNowSell
+                            y30Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell30.append(y30Sell)
 
-                    if maxNowSell > max60Sell:
-                        percent = (maxNowSell - max60Sell) / maxNowSell
-                        y60Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell60.append(y60Sell)
+                        if maxNowSell > max45Sell:
+                            percent = (maxNowSell - max45Sell) / maxNowSell
+                            y45Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell45.append(y45Sell)
 
-                    if maxNowIndividualSell > max10IndividualSell:
-                        percent = (maxNowIndividualSell - max10IndividualSell) / maxNowSell
-                        y10IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell10Ind.append(y10IndividualSell)
+                        if maxNowSell > max60Sell:
+                            percent = (maxNowSell - max60Sell) / maxNowSell
+                            y60Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell60.append(y60Sell)
 
-                    if maxNowIndividualSell > max20IndividualSell:
-                        percent = (maxNowIndividualSell - max20IndividualSell) / maxNowSell
-                        y20IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell20Ind.append(y20IndividualSell)
+                        if maxNowIndividualSell > max10IndividualSell:
+                            percent = (maxNowIndividualSell - max10IndividualSell) / maxNowSell
+                            y10IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell10Ind.append(y10IndividualSell)
 
-                    if maxNowIndividualSell > max30IndividualSell:
-                        percent = (maxNowIndividualSell - max30IndividualSell) / maxNowSell
-                        y30IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell30Ind.append(y30IndividualSell)
+                        if maxNowIndividualSell > max20IndividualSell:
+                            percent = (maxNowIndividualSell - max20IndividualSell) / maxNowSell
+                            y20IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell20Ind.append(y20IndividualSell)
+
+                        if maxNowIndividualSell > max30IndividualSell:
+                            percent = (maxNowIndividualSell - max30IndividualSell) / maxNowSell
+                            y30IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell30Ind.append(y30IndividualSell)
+
+            except:
+                logging.exception(symbol+symbol1)
 
     return sell10, sell20, sell30, sell45, sell60, sell10Ind, sell20Ind, sell30Ind
 
@@ -881,12 +886,12 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
+schedule.every().day.at("08:30").do(clearHotMoney)
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
 schedule.every().monday.at("10:14").do(startServer)
 schedule.every().tuesday.at("09:00").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
-schedule.every().day.at("09:00").do(clearHotMoney)
 # schedule.every().day.at("08:00").do(downloadCsvs)
 
 while True:
