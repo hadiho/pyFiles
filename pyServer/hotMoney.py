@@ -450,9 +450,10 @@ def max_Volume_buy():
         fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
         fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             try:
+                ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
+                df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+
                 df = df.fillna(0).astype({"individual_buy_vol": int})
             except:
                 logging.exception(symbol1)
