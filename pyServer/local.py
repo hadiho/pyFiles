@@ -313,7 +313,7 @@ def readCsv(json):
                     now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
                     past = datetime.strptime(df1.iloc[-1]['date'], '%Y-%m-%d')
                 except:
-                    logging.exception(symbol+df1.iloc[-1]['date'])
+                    logging.exception(symbol + df1.iloc[-1]['date'])
 
                 if now > past:
                     # print("create volume row")
@@ -337,7 +337,8 @@ def readCsv(json):
                     df1.iloc[-1, df1.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
                     df1.iloc[-1, df1.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
                     df1.iloc[-1, df1.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
-                    df1.iloc[-1, df1.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
+                    df1.iloc[-1, df1.columns.get_loc('individual_ownership_change')] = row_contentsVolume[
+                        13]  # co_sell_volume
                     df1.iloc[-1, df1.columns.get_loc('jdate')] = row_contentsVolume[14]
 
                     df1.to_csv(fileNameVolume, index=False)
@@ -359,16 +360,19 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-       if dataA[idx]['name'] == 'تاصیکو':
-          readCsv(dataA[idx])
+        readCsv(dataA[idx])
+        # if dataA[idx]['name'] == 'تاصیکو':
 
+    timeVolume()
 
 
 def detectVolume():
     dataA = lastChanges()
     if dataA is not None:
         hotMoney(dataA)
-        historyVolume(dataA)
+        timeNow = str(datetime.now().hour) + str(datetime.now().minute)
+        if timeNow == "0930" or timeNow == "1030" or timeNow == "1130" or timeNow == "1230":
+            historyVolume(dataA)
         lastList = []
         for data in dataA:
             if data['industry_code'] is not None:
@@ -543,8 +547,9 @@ def max_Volume_sell():
                 df = df.fillna(0).astype({"individual_sell_vol": int})
 
                 if not ticker.empty and ticker.size > 2:
-                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                        -1]:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == \
+                            df['date'].iloc[
+                                -1]:
                         maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
                         max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
                         max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
@@ -606,7 +611,7 @@ def max_Volume_sell():
                             sell30Ind.append(y30IndividualSell)
 
             except:
-                logging.exception(symbol+symbol1)
+                logging.exception(symbol + symbol1)
 
     return sell10, sell20, sell30, sell45, sell60, sell10Ind, sell20Ind, sell30Ind
 
@@ -816,11 +821,11 @@ def startServer():
     try:
         print("I'm working...")
         rt = RepeatedTimer(15, shakhesBource)
-        rt = RepeatedTimer(30, detectVolume)
-        rt = RepeatedTimer(500, timeVolume)
+        rt = RepeatedTimer(35, detectVolume)
         rt = RepeatedTimer(1000, car)
         rt = RepeatedTimer(800, currency)
         rt = RepeatedTimer(700, digital_currency)
+        # rt = RepeatedTimer(500, timeVolume)
 
         try:
             sleep(14400)
@@ -897,6 +902,7 @@ logger = logging.getLogger('urbanGUI')
 # while True:
 #     schedule.run_pending()
 #     time.sleep(30)
+
 
 # downloadOneCsv('تاصیکو')
 # startServer()
