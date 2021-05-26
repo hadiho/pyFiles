@@ -819,8 +819,8 @@ def shakhesBource():
 def timeVolume():
     pushMaxBuy()
     pushMaxSell()
-    possibleQueueBuy()
-    possibleQueueSell()
+    pushPossibleQueueBuy()
+    pushPossibleQueueSell()
 
 
 def startServer():
@@ -897,22 +897,22 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().day.at("08:30").do(clearHotMoney)
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("10:14").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
-# # schedule.every().day.at("08:00").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(30)
+schedule.every().day.at("08:30").do(clearHotMoney)
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("10:14").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+# schedule.every().day.at("08:00").do(downloadCsvs)
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)
 
 
 # downloadOneCsv('تاصیکو')
 # startServer()
-downloadCsvs()
+# downloadCsvs()
 # clear()
 # detectVolume()
 # timeVolume()
