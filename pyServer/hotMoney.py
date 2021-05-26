@@ -446,7 +446,8 @@ def max_Volume_buy():
     buy30Ind = []
 
     for symbol in all_symbols():
-        symbol1 = renameSymbol(symbol)
+      symbol1 = renameSymbol(symbol)
+      if symbol1 == 'کیا':
         fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
         fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
@@ -911,10 +912,10 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('تاصیکو')
 # startServer()
-# downloadCsvs()
+downloadCsvs()
 # clear()
 # detectVolume()
-timeVolume()
+# timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
