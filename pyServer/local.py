@@ -271,7 +271,7 @@ def readCsv(json):
                                   json['co_buy_value'],
                                   json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'],
                                   real_buy_mean_price,
-                                  real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
+                                  real_sell_mean_price, co_buy_mean_price, co_sell_mean_price, 0]
 
             if os.path.isfile(fileNameTicker) and is_non_zero_file(fileNameTicker):
                 # print(fileNameTicker)
@@ -284,10 +284,6 @@ def readCsv(json):
                     # print("create ticker row")
                     appendNewLineToCsv(fileNameTicker, row_contents, True)
                 elif now == past:
-                    # if len(df) == 1:
-                    #     columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
-                    #     appendNewLineToCsv(fileNameTicker, columns, True)
-                    # else:
                     df.iloc[-1, df.columns.get_loc('date')] = row_contents[0]
                     df.iloc[-1, df.columns.get_loc('open')] = row_contents[1]
                     df.iloc[-1, df.columns.get_loc('high')] = row_contents[2]
@@ -311,37 +307,40 @@ def readCsv(json):
 
             if os.path.isfile(fileNameVolume) and is_non_zero_file(fileNameVolume):
                 # print(fileNameVolume)
-                df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+                df1 = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
-                now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-                past = datetime.strptime(str(df.iloc[-1]['date']), '%Y-%m-%d')
+                try:
+                    now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+                    past = datetime.strptime(df1.iloc[-1]['date'], '%Y-%m-%d')
+                except:
+                    logging.exception(symbol+df1.iloc[-1]['date'])
 
                 if now > past:
                     # print("create volume row")
                     appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
 
                 elif now == past:
-                    df.iloc[-1, df.columns.get_loc('date')] = row_contentsVolume[0]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
-                    df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[
-                        13]  # co_sell_volume
+                    df1.iloc[-1, df1.columns.get_loc('date')] = row_contentsVolume[0]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
+                    df1.iloc[-1, df1.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
+                    df1.iloc[-1, df1.columns.get_loc('jdate')] = row_contentsVolume[14]
 
-                    df.to_csv(fileNameVolume, index=False)
+                    df1.to_csv(fileNameVolume, index=False)
                     # print("update volume row")
             else:
                 columns = ['date', 'individual_buy_count', 'corporate_buy_count', 'individual_sell_count',
@@ -360,8 +359,9 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-        readCsv(dataA[idx])
-        # if dataA[idx]['name'] == 'فایرا':
+       if dataA[idx]['name'] == 'تاصیکو':
+          readCsv(dataA[idx])
+
 
 
 def detectVolume():
@@ -448,12 +448,12 @@ def max_Volume_buy():
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            df = df.astype({"individual_buy_vol": int})
-            df = df.astype({"individual_buy_count": int})
-            df = df.astype({"corporate_buy_vol": int})
-            df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"corporate_sell_vol": int})
-            df = df.astype({"individual_sell_vol": int})
+            df = df.fillna(0).astype({"individual_buy_vol": int})
+            df = df.fillna(0).astype({"individual_buy_count": int})
+            df = df.fillna(0).astype({"corporate_buy_vol": int})
+            df = df.fillna(0).astype({"corporate_buy_count": int})
+            df = df.fillna(0).astype({"corporate_sell_vol": int})
+            df = df.fillna(0).astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
@@ -531,77 +531,82 @@ def max_Volume_sell():
         fileNameTicker = 'tickers_data/' + symbol1 + '.csv'
         fileNameVolume = 'client_types_data/' + symbol1 + '.csv'
         if os.path.isfile(fileNameTicker) and os.path.isfile(fileNameVolume):
-            ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
-            df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
-            df = df.astype({"individual_buy_vol": int})
-            df = df.astype({"individual_buy_count": int})
-            df = df.astype({"corporate_buy_vol": int})
-            df = df.astype({"corporate_buy_count": int})
-            df = df.astype({"corporate_sell_vol": int})
-            df = df.astype({"individual_sell_vol": int})
+            try:
 
-            if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
-                    maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
-                    max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
-                    max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
-                    max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
-                    max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
-                    max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
+                ticker = pd.read_csv(fileNameTicker, index_col=False)
+                df = pd.read_csv(fileNameVolume, index_col=False)
+                df = df.fillna(0).astype({"individual_buy_vol": int})
+                df = df.fillna(0).astype({"individual_buy_count": int})
+                df = df.fillna(0).astype({"corporate_buy_vol": int})
+                df = df.fillna(0).astype({"corporate_buy_count": int})
+                df = df.fillna(0).astype({"corporate_sell_vol": int})
+                df = df.fillna(0).astype({"individual_sell_vol": int})
 
-                    maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
-                    max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
-                    max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
-                    max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
+                if not ticker.empty and ticker.size > 2:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                        -1]:
+                        maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
+                        max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
+                        max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
+                        max30Sell = int(max(df['individual_sell_vol'][-30:-1] + df['corporate_sell_vol'][-30:-1]))
+                        max45Sell = int(max(df['individual_sell_vol'][-45:-1] + df['corporate_sell_vol'][-45:-1]))
+                        max60Sell = int(max(df['individual_sell_vol'][-60:-1] + df['corporate_sell_vol'][-60:-1]))
 
-                    if maxNowSell > max10Sell:
-                        percent = (maxNowSell - max10Sell) / maxNowSell
-                        y10Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell10.append(y10Sell)
+                        maxNowIndividualSell = int(df['individual_sell_vol'].iloc[-1])
+                        max10IndividualSell = int(max(df['individual_sell_vol'][-10:-1]))
+                        max20IndividualSell = int(max(df['individual_sell_vol'][-20:-1]))
+                        max30IndividualSell = int(max(df['individual_sell_vol'][-30:-1]))
 
-                    if maxNowSell > max20Sell:
-                        percent = (maxNowSell - max20Sell) / maxNowSell
-                        y20Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell20.append(y20Sell)
+                        if maxNowSell > max10Sell:
+                            percent = (maxNowSell - max10Sell) / maxNowSell
+                            y10Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell10.append(y10Sell)
 
-                    if maxNowSell > max30Sell:
-                        percent = (maxNowSell - max30Sell) / maxNowSell
-                        y30Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell30.append(y30Sell)
+                        if maxNowSell > max20Sell:
+                            percent = (maxNowSell - max20Sell) / maxNowSell
+                            y20Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell20.append(y20Sell)
 
-                    if maxNowSell > max45Sell:
-                        percent = (maxNowSell - max45Sell) / maxNowSell
-                        y45Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell45.append(y45Sell)
+                        if maxNowSell > max30Sell:
+                            percent = (maxNowSell - max30Sell) / maxNowSell
+                            y30Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell30.append(y30Sell)
 
-                    if maxNowSell > max60Sell:
-                        percent = (maxNowSell - max60Sell) / maxNowSell
-                        y60Sell = {"symbol": symbol, "vol": maxNowSell,
-                                   "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell60.append(y60Sell)
+                        if maxNowSell > max45Sell:
+                            percent = (maxNowSell - max45Sell) / maxNowSell
+                            y45Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell45.append(y45Sell)
 
-                    if maxNowIndividualSell > max10IndividualSell:
-                        percent = (maxNowIndividualSell - max10IndividualSell) / maxNowSell
-                        y10IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell10Ind.append(y10IndividualSell)
+                        if maxNowSell > max60Sell:
+                            percent = (maxNowSell - max60Sell) / maxNowSell
+                            y60Sell = {"symbol": symbol, "vol": maxNowSell,
+                                       "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell60.append(y60Sell)
 
-                    if maxNowIndividualSell > max20IndividualSell:
-                        percent = (maxNowIndividualSell - max20IndividualSell) / maxNowSell
-                        y20IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell20Ind.append(y20IndividualSell)
+                        if maxNowIndividualSell > max10IndividualSell:
+                            percent = (maxNowIndividualSell - max10IndividualSell) / maxNowSell
+                            y10IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell10Ind.append(y10IndividualSell)
 
-                    if maxNowIndividualSell > max30IndividualSell:
-                        percent = (maxNowIndividualSell - max30IndividualSell) / maxNowSell
-                        y30IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
-                                             "percent": float("{:.2f}".format(round(percent, 2)))}
-                        sell30Ind.append(y30IndividualSell)
+                        if maxNowIndividualSell > max20IndividualSell:
+                            percent = (maxNowIndividualSell - max20IndividualSell) / maxNowSell
+                            y20IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell20Ind.append(y20IndividualSell)
+
+                        if maxNowIndividualSell > max30IndividualSell:
+                            percent = (maxNowIndividualSell - max30IndividualSell) / maxNowSell
+                            y30IndividualSell = {"symbol": symbol, "vol": maxNowIndividualSell,
+                                                 "percent": float("{:.2f}".format(round(percent, 2)))}
+                            sell30Ind.append(y30IndividualSell)
+
+            except:
+                logging.exception(symbol+symbol1)
 
     return sell10, sell20, sell30, sell45, sell60, sell10Ind, sell20Ind, sell30Ind
 
@@ -833,28 +838,24 @@ def downloadCsvs():
     print("to download Csv ...")
     tickers = tse.download(symbols='all', write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols='all', write_to_csv=True, include_jdate=True)
+    clear()
     for symbol in all_symbols():
         symbol1 = renameSymbol(symbol)
         df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
         df = df.sort_values(by='date', ascending=True)
+        symbol1 = renameSymbol(symbol)
         df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
         print(symbol)
     print("finish download csv")
     timeVolume()
-
-def clear():
-    for name in os.listdir('client_types_data/'):
-        if os.path.isfile(os.path.join('client_types_data/', name)):
-            old_file = os.path.join("client_types_data/", name)
-            new_file = os.path.join("client_types_data/", renameSymbol(name))
-            os.rename(old_file, new_file)
 
 
 def downloadOneCsv(symbol):
     print("to download Csv ...")
     tickers = tse.download(symbols=symbol, write_to_csv=True, include_jdate=True)
     records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
+    clear()
     symbol1 = renameSymbol(symbol)
     df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                      error_bad_lines=False)
@@ -862,6 +863,19 @@ def downloadOneCsv(symbol):
     df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
     print(symbol)
     print("finish download csv")
+
+
+def clear():
+    for name in os.listdir('tickers_data/'):
+        if os.path.isfile(os.path.join('tickers_data/', name)):
+            old_file = os.path.join("tickers_data/", name)
+            new_file = os.path.join("tickers_data/", renameSymbol(name))
+            os.rename(old_file, new_file)
+    for name in os.listdir('client_types_data/'):
+        if os.path.isfile(os.path.join('client_types_data/', name)):
+            old_file = os.path.join("client_types_data/", name)
+            new_file = os.path.join("client_types_data/", renameSymbol(name))
+            os.rename(old_file, new_file)
 
 
 logging.basicConfig(filename="log.txt",
@@ -872,24 +886,24 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
+# schedule.every().day.at("08:30").do(clearHotMoney)
 # schedule.every().saturday.at("09:00").do(startServer)
 # schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
+# schedule.every().monday.at("10:14").do(startServer)
 # schedule.every().tuesday.at("09:00").do(startServer)
 # schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("09:00").do(clearHotMoney)
-# # schedule.every().day.at("17:00").do(downloadCsvs)
+# # schedule.every().day.at("08:00").do(downloadCsvs)
 #
 # while True:
 #     schedule.run_pending()
 #     time.sleep(30)
 
-# downloadOneCsv('فملی')
+# downloadOneCsv('تاصیکو')
 # startServer()
 # downloadCsvs()
+# clear()
 # detectVolume()
-# timeVolume()
-clear()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()

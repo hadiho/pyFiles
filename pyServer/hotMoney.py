@@ -271,7 +271,7 @@ def readCsv(json):
                                   json['co_buy_value'],
                                   json['real_sell_value'], json['co_sell_value'], json['co_sell_volume'],
                                   real_buy_mean_price,
-                                  real_sell_mean_price, co_buy_mean_price, co_sell_mean_price]
+                                  real_sell_mean_price, co_buy_mean_price, co_sell_mean_price, 0]
 
             if os.path.isfile(fileNameTicker) and is_non_zero_file(fileNameTicker):
                 # print(fileNameTicker)
@@ -284,10 +284,6 @@ def readCsv(json):
                     # print("create ticker row")
                     appendNewLineToCsv(fileNameTicker, row_contents, True)
                 elif now == past:
-                    # if len(df) == 1:
-                    #     columns = ['date', 'open', 'high', 'low', 'adjClose', 'value', 'volume', 'count', 'close', 'jdate']
-                    #     appendNewLineToCsv(fileNameTicker, columns, True)
-                    # else:
                     df.iloc[-1, df.columns.get_loc('date')] = row_contents[0]
                     df.iloc[-1, df.columns.get_loc('open')] = row_contents[1]
                     df.iloc[-1, df.columns.get_loc('high')] = row_contents[2]
@@ -310,38 +306,41 @@ def readCsv(json):
                 # print("exist create ticker row")
 
             if os.path.isfile(fileNameVolume) and is_non_zero_file(fileNameVolume):
-                print(fileNameVolume)
-                df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+                # print(fileNameVolume)
+                df1 = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
-                now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
-                past = datetime.strptime(str(df.iloc[-1]['date']), '%Y-%m-%d')
+                try:
+                    now = datetime.strptime(datetime.now().strftime('%Y-%m-%d'), '%Y-%m-%d')
+                    past = datetime.strptime(df1.iloc[-1]['date'], '%Y-%m-%d')
+                except:
+                    logging.exception(symbol+df1.iloc[-1]['date'])
 
                 if now > past:
                     # print("create volume row")
                     appendNewLineToCsv(fileNameVolume, row_contentsVolume, True)
 
                 elif now == past:
-                    df.iloc[-1, df.columns.get_loc('date')] = row_contentsVolume[0]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
-                    df.iloc[-1, df.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
-                    df.iloc[-1, df.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
-                    df.iloc[-1, df.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
-                    df.iloc[-1, df.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
-                    df.iloc[-1, df.columns.get_loc('individual_ownership_change')] = row_contentsVolume[
-                        13]  # co_sell_volume
+                    df1.iloc[-1, df1.columns.get_loc('date')] = row_contentsVolume[0]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_count')] = row_contentsVolume[1]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_count')] = row_contentsVolume[2]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_count')] = row_contentsVolume[3]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_count')] = row_contentsVolume[4]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_vol')] = row_contentsVolume[5]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_vol')] = row_contentsVolume[6]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_vol')] = row_contentsVolume[7]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_vol')] = row_contentsVolume[8]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_value')] = row_contentsVolume[9]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_value')] = row_contentsVolume[10]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_value')] = row_contentsVolume[11]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_value')] = row_contentsVolume[12]
+                    df1.iloc[-1, df1.columns.get_loc('individual_buy_mean_price')] = row_contentsVolume[14]
+                    df1.iloc[-1, df1.columns.get_loc('individual_sell_mean_price')] = row_contentsVolume[15]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_buy_mean_price')] = row_contentsVolume[16]
+                    df1.iloc[-1, df1.columns.get_loc('corporate_sell_mean_price')] = row_contentsVolume[17]
+                    df1.iloc[-1, df1.columns.get_loc('individual_ownership_change')] = row_contentsVolume[13]  # co_sell_volume
+                    df1.iloc[-1, df1.columns.get_loc('jdate')] = row_contentsVolume[14]
 
-                    df.to_csv(fileNameVolume, index=False)
+                    df1.to_csv(fileNameVolume, index=False)
                     # print("update volume row")
             else:
                 columns = ['date', 'individual_buy_count', 'corporate_buy_count', 'individual_sell_count',
@@ -360,8 +359,9 @@ def readCsv(json):
 
 def historyVolume(dataA):
     for idx, val in enumerate(dataA):
-        readCsv(dataA[idx])
-        # if dataA[idx]['name'] == 'فایرا':
+       if dataA[idx]['name'] == 'تاصیکو':
+          readCsv(dataA[idx])
+
 
 
 def detectVolume():
@@ -886,24 +886,24 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().day.at("08:30").do(clearHotMoney)
-schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("10:14").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
-schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("08:00").do(downloadCsvs)
+# schedule.every().day.at("08:30").do(clearHotMoney)
+# schedule.every().saturday.at("09:00").do(startServer)
+# schedule.every().sunday.at("09:00").do(startServer)
+# schedule.every().monday.at("10:14").do(startServer)
+# schedule.every().tuesday.at("09:00").do(startServer)
+# schedule.every().wednesday.at("09:00").do(startServer)
+# # schedule.every().day.at("08:00").do(downloadCsvs)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(30)
 
-while True:
-    schedule.run_pending()
-    time.sleep(30)
-
-# downloadOneCsv('فملی')
+# downloadOneCsv('تاصیکو')
 # startServer()
 # downloadCsvs()
 # clear()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
