@@ -165,7 +165,7 @@ def lastChanges():
         resp = requests.get(
             'https://sourcearena.ir/api/?token=' + token + '&all&type=0')
         print("lastChanges ", resp.status_code)
-        if resp.status_code == 200:
+        if resp.status_code == 200 and resp is not None:
             data = json.loads(resp.text)
             return data
     except:
@@ -297,6 +297,7 @@ def readCsv(json):
 
                     # df.drop(df.tail(-1).index, inplace=True)
                     # appendNewLineToCsv(fileNameTicker, row_contents, True)
+                    df.fillna(0, inplace=True)
                     df.to_csv(fileNameTicker, index=False)
                     # print("update ticker row")
             else:
@@ -340,7 +341,7 @@ def readCsv(json):
                     df1.iloc[-1, df1.columns.get_loc('individual_ownership_change')] = row_contentsVolume[
                         13]  # co_sell_volume
                     df1.iloc[-1, df1.columns.get_loc('jdate')] = row_contentsVolume[14]
-
+                    df1.fillna(0, inplace=True)
                     df1.to_csv(fileNameVolume, index=False)
                     # print("update volume row")
             else:
@@ -700,8 +701,8 @@ def possibleQueueBuy():
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
                 if ticker['close'].iloc[-1] > ticker['adjClose'].iloc[-1]:
-                    percent = (ticker['close'].iloc[-1] - ticker['adjClose'].iloc[-1]) * 100 / ticker['adjClose'].iloc[
-                        -1]
+                    percent = (int(ticker['close'].iloc[-1]) - int(ticker['adjClose'].iloc[-1])) * 100 / int(ticker['adjClose'].iloc[
+                        -1])
                     if percent > 3:
                         cell = {"symbol": symbol,
                                 "close": ticker['close'].iloc[-1],
@@ -723,7 +724,7 @@ def possibleQueueSell():
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
             if ticker['close'].iloc[-1] is not None and today == df['date'].iloc[-1]:
                 if ticker['adjClose'].iloc[-1] > ticker['close'].iloc[-1]:
-                    percent = (ticker['adjClose'].iloc[-1] - ticker['close'].iloc[-1]) * 100 / ticker['close'].iloc[-1]
+                    percent = (int(ticker['adjClose'].iloc[-1]) - int(ticker['close'].iloc[-1])) * 100 / int(ticker['close'].iloc[-1])
                     if percent > 3:
                         cell = {"symbol": symbol,
                                 "close": ticker['close'].iloc[-1],
@@ -807,7 +808,7 @@ def shakhesBource():
     if resp.status_code == 200:
         dataA = json.loads(resp.text)
         shakhesBource = []
-        if dataA is not None:
+        if dataA is not None and len(dataA["bourse"]) != 0:
             cell = {"state": dataA["bourse"]["state"], "b_index": dataA["bourse"]["index"],
                     "index_change": dataA["bourse"]["index_change"],
                     "index_change_percent": dataA["bourse"]["index_change_percent"],
@@ -859,6 +860,7 @@ def downloadCsvs():
         symbol1 = renameSymbol(symbol)
         df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
+        df = df.fillna(0, inplace=True)
         df = df.sort_values(by='date', ascending=True)
         symbol1 = renameSymbol(symbol)
         df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
@@ -876,6 +878,7 @@ def downloadOneCsv(symbol):
     df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                      error_bad_lines=False)
     df = df.sort_values(by='date', ascending=True)
+    df = df.fillna(0, inplace=True)
     df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
     print(symbol)
     print("finish download csv")
@@ -902,21 +905,27 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().day.at("08:30").do(clearHotMoney)
-schedule.every().saturday.at("09:00").do(startServer)
-schedule.every().sunday.at("09:00").do(startServer)
-schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
-schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("08:00").do(downloadCsvs)
-
-while True:
-    schedule.run_pending()
-    time.sleep(30)
+# schedule.every().saturday.at("08:30").do(clearHotMoney)
+# schedule.every().sunday.at("08:30").do(clearHotMoney)
+# schedule.every().monday.at("08:30").do(clearHotMoney)
+# schedule.every().tuesday.at("08:30").do(clearHotMoney)
+# schedule.every().wednesday.at("09:00").do(startServer)
+#
+# schedule.every().saturday.at("09:00").do(startServer)
+# schedule.every().sunday.at("09:00").do(startServer)
+# schedule.every().monday.at("09:00").do(startServer)
+# schedule.every().tuesday.at("09:00").do(startServer)
+# schedule.every().wednesday.at("09:00").do(startServer)
+# # schedule.every().day.at("08:00").do(downloadCsvs)
+#
+# while True:
+#     schedule.run_pending()
+#     time.sleep(30)
 
 # downloadOneCsv('تاصیکو')
 # startServer()
-# downloadCsvs()
+shakhesBource()
+downloadCsvs()
 # clear()
 # detectVolume()
 # timeVolume()
@@ -925,7 +934,6 @@ while True:
 # currency()
 # digital_currency()
 # car()
-# shakhesBource()
 # startShakhes()
 # readCsv()
 # possibleQueueBuy()
