@@ -860,8 +860,8 @@ def downloadCsvs():
         symbol1 = renameSymbol(symbol)
         df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                          error_bad_lines=False)
-        df = df.fillna(0, inplace=True)
         df = df.sort_values(by='date', ascending=True)
+        df.fillna(0, inplace=True)
         symbol1 = renameSymbol(symbol)
         df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
         print(symbol)
@@ -878,7 +878,7 @@ def downloadOneCsv(symbol):
     df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,
                      error_bad_lines=False)
     df = df.sort_values(by='date', ascending=True)
-    df = df.fillna(0, inplace=True)
+    df.fillna(0, inplace=True)
     df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
     print(symbol)
     print("finish download csv")
@@ -924,7 +924,7 @@ logger = logging.getLogger('urbanGUI')
 
 # downloadOneCsv('تاصیکو')
 # startServer()
-shakhesBource()
+# shakhesBource()
 downloadCsvs()
 # clear()
 # detectVolume()
