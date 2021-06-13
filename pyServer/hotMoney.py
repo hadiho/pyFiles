@@ -166,7 +166,7 @@ def lastChanges():
             'https://sourcearena.ir/api/?token=' + token + '&all&type=0')
         print("lastChanges ", resp.status_code)
         if resp.status_code == 200 and resp is not None:
-            data = json.loads(resp.text)
+            data = json.loads(resp.text, strict=False)
             return data
     except:
         logging.exception("Error")
@@ -905,22 +905,23 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-# schedule.every().saturday.at("08:30").do(clearHotMoney)
-# schedule.every().sunday.at("08:30").do(clearHotMoney)
-# schedule.every().monday.at("08:30").do(clearHotMoney)
-# schedule.every().tuesday.at("08:30").do(clearHotMoney)
-# schedule.every().wednesday.at("09:00").do(startServer)
+schedule.every().day.at("08:00").do(downloadCsvs)
 
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("10:18").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
-# schedule.every().day.at("08:00").do(downloadCsvs)
-#
-# while True:
-#     schedule.run_pending()
-#     time.sleep(30)
+schedule.every().saturday.at("08:30").do(clearHotMoney)
+schedule.every().sunday.at("08:30").do(clearHotMoney)
+schedule.every().monday.at("08:30").do(clearHotMoney)
+schedule.every().tuesday.at("08:30").do(clearHotMoney)
+schedule.every().wednesday.at("08:30").do(clearHotMoney)
+
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+
+while True:
+    schedule.run_pending()
+    time.sleep(30)
 
 # clearHotMoney()
 # downloadCsvs()
@@ -930,7 +931,7 @@ logger = logging.getLogger('urbanGUI')
 # downloadCsvs()
 # clear()
 # detectVolume()
-timeVolume()
+# timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
