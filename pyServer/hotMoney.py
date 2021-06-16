@@ -823,10 +823,10 @@ def shakhesBource():
 
 
 def timeVolume():
-    pushMaxBuy()
-    pushMaxSell()
     pushPossibleQueueBuy()
     pushPossibleQueueSell()
+    pushMaxBuy()
+    pushMaxSell()
 
 
 def startServer():
@@ -931,7 +931,7 @@ logger = logging.getLogger('urbanGUI')
 # downloadCsvs()
 # clear()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
@@ -939,5 +939,5 @@ logger = logging.getLogger('urbanGUI')
 # car()
 # startShakhes()
 # readCsv()
-pushPossibleQueueBuy()
+# pushPossibleQueueBuy()
 # startDetectVolume()
