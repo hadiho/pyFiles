@@ -452,6 +452,8 @@ def max_Volume_buy():
         if os.path.isfile(fileNameVolume) and os.path.isfile(fileNameTicker):
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
+            if symbol1 == "فولاد":
+                print(symbol)
             try:
                 df = df.fillna(0).astype({"individual_buy_vol": int})
             except:
@@ -815,9 +817,9 @@ def shakhesBource():
 
 
 def timeVolume():
-    # pushMaxBuy()
+    pushMaxBuy()
     # pushMaxSell()
-    pushPossibleQueueBuy()
+    # pushPossibleQueueBuy()
     # pushPossibleQueueSell()
 
 
@@ -866,7 +868,7 @@ def downloadOneCsv(symbol):
     records_dict = download_client_types_records(symbols=symbol, write_to_csv=True, include_jdate=True)
     clear()
     symbol1 = renameSymbol(symbol)
-    df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False,error_bad_lines=False)
+    df = pd.read_csv('client_types_data/' + symbol1 + '.csv', index_col=False, low_memory=False, error_bad_lines=False)
     df = df.sort_values(by='date', ascending=True)
     df.fillna(0, inplace=True)
     df.to_csv('client_types_data/' + symbol1 + '.csv', index=False)
@@ -908,12 +910,12 @@ logger = logging.getLogger('urbanGUI')
 #     time.sleep(30)
 
 
-downloadOneCsv('سقاین')
+# downloadOneCsv('قشرین')
 # startServer()
 # downloadCsvs()
 # clear()
 # detectVolume()
-# timeVolume()
+timeVolume()
 # all_stocks()
 # print(volumeChanges())
 # currency()
