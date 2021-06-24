@@ -48,10 +48,11 @@ server.listen(8000,function(){
 
 console.log(MySQLEvents.STATEMENTS);
 const program = async () => {
-  const connection = mysql.createConnection({
+  const connection = mysql.createPool({
     host: '194.5.175.58',
     user: 'root',
     password: 'Hadi2150008140@$&!',
+    isPool: true,
   });
 
   const instance = new MySQLEvents(connection, {
@@ -111,8 +112,10 @@ const program = async () => {
     },
   });
   
-  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, console.error);
-  instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, console.error);
+
+  instance.on(MySQLEvents.EVENTS.CONNECTION_ERROR, (err) => console.log('Connection error', err));
+  instance.on(MySQLEvents.EVENTS.ZONGJI_ERROR, (err) => console.log('ZongJi error', err));
+
 };
 
 program()

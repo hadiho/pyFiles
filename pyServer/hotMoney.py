@@ -162,14 +162,12 @@ def renameSymbol(symbol):
 
 def lastChanges():
     try:
-        resp = requests.get(
-            'https://sourcearena.ir/api/?token=' + token + '&all&type=0')
-        print("lastChanges ", resp.status_code)
-        if resp.status_code == 200 and resp is not None:
+        resp = requests.get('https://sourcearena.ir/api/?token=' + token + '&all&type=0')
+        if resp.status_code == 200 and resp.text != "null" and resp.text is not None:
             data = json.loads(resp.text, strict=False)
             return data
     except:
-        logging.exception("Error")
+        logging.exception("Error" + resp.text)
 
     return None
 
@@ -188,9 +186,10 @@ def hotMoney(newData):
 
                 for j, v in enumerate(saveData):
                     if newData[idx]['name'] == saveData[j]['name']:
-                        if saveData[j]['real_buy_count'] is not None and newData[idx][
-                            'real_buy_count'] is not None and saveData[j]['real_buy_count'] != "0" and \
-                                newData[idx]['real_buy_count'] != "0":
+                        if saveData[j]['real_buy_count'] != "null" and saveData[j]['real_buy_count'] is not None and \
+                                newData[idx]['real_buy_count'] != "null" and newData[idx][
+                            'real_buy_count'] is not None and saveData[j]['real_buy_count'] != "0" and newData[idx][
+                            'real_buy_count'] != "0":
                             value = int(newData[idx]['real_buy_value']) - int(saveData[j]['real_buy_value'])
                             if value > 2000000000:
                                 count = int(newData[idx]['real_buy_count']) - int(saveData[j]['real_buy_count'])
@@ -204,9 +203,10 @@ def hotMoney(newData):
                                             "type": 1}
                                     hotMoneyList.append(cell)
 
-                        if saveData[j]['real_sell_count'] is not None and newData[idx][
-                            'real_sell_count'] is not None and saveData[j][
-                            'real_sell_count'] != "0" and newData[idx]['real_sell_count'] != "0":
+                        if saveData[j]['real_sell_count'] != "null" and saveData[j]['real_sell_count'] is not None and \
+                                newData[idx]['real_sell_count'] != "null" and newData[idx][
+                            'real_sell_count'] is not None and saveData[j]['real_sell_count'] != "0" and newData[idx][
+                            'real_sell_count'] != "0":
                             value = int(newData[idx]['real_sell_value']) - int(saveData[j]['real_sell_value'])
                             if value > 2000000000:
                                 count = int(newData[idx]['real_sell_count']) - int(saveData[j]['real_sell_count'])
@@ -463,7 +463,8 @@ def max_Volume_buy():
             df = df.fillna(0).astype({"individual_sell_vol": int})
 
             if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
+                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                    -1]:
                     maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
                     max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
                     max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
@@ -554,7 +555,8 @@ def max_Volume_sell():
                 df = df.fillna(0).astype({"individual_sell_vol": int})
 
                 if not ticker.empty and ticker.size > 2:
-                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[-1]:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == \
+                            df['date'].iloc[-1]:
                         maxNowSell = int(df['individual_sell_vol'].iloc[-1]) + int(df['corporate_sell_vol'].iloc[-1])
                         max10Sell = int(max(df['individual_sell_vol'][-10:-1] + df['corporate_sell_vol'][-10:-1]))
                         max20Sell = int(max(df['individual_sell_vol'][-20:-1] + df['corporate_sell_vol'][-20:-1]))
