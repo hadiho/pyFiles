@@ -454,13 +454,16 @@ def max_Volume_buy():
             ticker = pd.read_csv(fileNameTicker, index_col=False, low_memory=False, error_bad_lines=False)
             df = pd.read_csv(fileNameVolume, index_col=False, low_memory=False, error_bad_lines=False)
 
-            df = df.fillna(0).astype({"individual_buy_vol": int})
-            df = df.fillna(0).astype({"individual_buy_vol": int})
-            df = df.fillna(0).astype({"individual_buy_count": int})
-            df = df.fillna(0).astype({"corporate_buy_vol": int})
-            df = df.fillna(0).astype({"corporate_buy_count": int})
-            df = df.fillna(0).astype({"corporate_sell_vol": int})
-            df = df.fillna(0).astype({"individual_sell_vol": int})
+            try:
+                df = df.fillna(0).astype({"individual_buy_vol": int})
+                df = df.fillna(0).astype({"individual_buy_vol": int})
+                df = df.fillna(0).astype({"individual_buy_count": int})
+                df = df.fillna(0).astype({"corporate_buy_vol": int})
+                df = df.fillna(0).astype({"corporate_buy_count": int})
+                df = df.fillna(0).astype({"corporate_sell_vol": int})
+                df = df.fillna(0).astype({"individual_sell_vol": int})
+            except:
+                logging.exception(symbol + symbol1)
 
             if not ticker.empty and ticker.size > 2:
                 if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
