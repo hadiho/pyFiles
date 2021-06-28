@@ -462,71 +462,73 @@ def max_Volume_buy():
                 df = df.fillna(0).astype({"corporate_buy_count": int})
                 df = df.fillna(0).astype({"corporate_sell_vol": int})
                 df = df.fillna(0).astype({"individual_sell_vol": int})
+
+
+                if not ticker.empty and ticker.size > 2:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
+                        -1]:
+                        maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
+                        max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
+                        max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
+                        max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
+                        max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
+                        max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
+
+                        maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
+                        max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
+                        max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
+                        max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
+
+                        if maxNow > max10:
+                            percent = (maxNow - max10) / maxNow
+                            y10 = {"symbol": symbol, "vol": maxNow,
+                                   "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy10.append(y10)
+
+                        if maxNow > max20:
+                            percent = (maxNow - max20) / maxNow
+                            y20 = {"symbol": symbol, "vol": maxNow,
+                                   "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy20.append(y20)
+
+                        if maxNow > max30:
+                            percent = (maxNow - max30) / maxNow
+                            y30 = {"symbol": symbol, "vol": maxNow,
+                                   "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy30.append(y30)
+
+                        if maxNow > max45:
+                            percent = (maxNow - max45) / maxNow
+                            y45 = {"symbol": symbol, "vol": maxNow,
+                                   "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy45.append(y45)
+
+                        if maxNow > max60:
+                            percent = (maxNow - max60) / maxNow
+                            y60 = {"symbol": symbol, "vol": maxNow,
+                                   "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy60.append(y60)
+
+                        if maxNowIndividual > max10Individual:
+                            percent = (maxNowIndividual - max10Individual) / maxNow
+                            y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy10Ind.append(y10Individual)
+
+                        if maxNowIndividual > max20Individual:
+                            percent = (maxNowIndividual - max20Individual) / maxNow
+                            y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy20Ind.append(y20Individual)
+
+                        if maxNowIndividual > max30Individual:
+                            percent = (maxNowIndividual - max30Individual) / maxNow
+                            y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
+                                             "percent": float("{:.2f}".format(round(percent, 2)))}
+                            buy30Ind.append(y30Individual)
+
             except:
                 logging.exception(symbol + symbol1)
-
-            if not ticker.empty and ticker.size > 2:
-                if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                    -1]:
-                    maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
-                    max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
-                    max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
-                    max30 = int(max(df['individual_buy_vol'][-30:-1] + df['corporate_buy_vol'][-30:-1]))
-                    max45 = int(max(df['individual_buy_vol'][-45:-1] + df['corporate_buy_vol'][-45:-1]))
-                    max60 = int(max(df['individual_buy_vol'][-60:-1] + df['corporate_buy_vol'][-60:-1]))
-
-                    maxNowIndividual = int(df['individual_buy_vol'].iloc[-1])
-                    max10Individual = int(max(df['individual_buy_vol'][-10:-1]))
-                    max20Individual = int(max(df['individual_buy_vol'][-20:-1]))
-                    max30Individual = int(max(df['individual_buy_vol'][-30:-1]))
-
-                    if maxNow > max10:
-                        percent = (maxNow - max10) / maxNow
-                        y10 = {"symbol": symbol, "vol": maxNow,
-                               "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy10.append(y10)
-
-                    if maxNow > max20:
-                        percent = (maxNow - max20) / maxNow
-                        y20 = {"symbol": symbol, "vol": maxNow,
-                               "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy20.append(y20)
-
-                    if maxNow > max30:
-                        percent = (maxNow - max30) / maxNow
-                        y30 = {"symbol": symbol, "vol": maxNow,
-                               "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy30.append(y30)
-
-                    if maxNow > max45:
-                        percent = (maxNow - max45) / maxNow
-                        y45 = {"symbol": symbol, "vol": maxNow,
-                               "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy45.append(y45)
-
-                    if maxNow > max60:
-                        percent = (maxNow - max60) / maxNow
-                        y60 = {"symbol": symbol, "vol": maxNow,
-                               "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy60.append(y60)
-
-                    if maxNowIndividual > max10Individual:
-                        percent = (maxNowIndividual - max10Individual) / maxNow
-                        y10Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy10Ind.append(y10Individual)
-
-                    if maxNowIndividual > max20Individual:
-                        percent = (maxNowIndividual - max20Individual) / maxNow
-                        y20Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy20Ind.append(y20Individual)
-
-                    if maxNowIndividual > max30Individual:
-                        percent = (maxNowIndividual - max30Individual) / maxNow
-                        y30Individual = {"symbol": symbol, "vol": maxNowIndividual,
-                                         "percent": float("{:.2f}".format(round(percent, 2)))}
-                        buy30Ind.append(y30Individual)
 
     return buy10, buy20, buy30, buy45, buy60, buy10Ind, buy20Ind, buy30Ind
 
