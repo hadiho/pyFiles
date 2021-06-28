@@ -706,8 +706,8 @@ def possibleQueueBuy():
                             -1])
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker['close'].iloc[-1],
-                                "closeP": ticker['adjClose'].iloc[-1],
+                                "close": ticker['adjClose'].iloc[-1],
+                                "closeP": ticker['close'].iloc[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleBuy.append(cell)
 
@@ -729,8 +729,8 @@ def possibleQueueSell():
                         ticker['close'].iloc[-1])
                     if percent > 3:
                         cell = {"symbol": symbol,
-                                "close": ticker['close'].iloc[-1],
-                                "closeP": ticker['adjClose'].iloc[-1],
+                                "close": ticker['adjClose'].iloc[-1],
+                                "closeP": ticker['close'].iloc[-1],
                                 "percent": float("{:.2f}".format(round(percent, 2)))}
                         possibleSell.append(cell)
 
