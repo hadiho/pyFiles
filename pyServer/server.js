@@ -86,7 +86,7 @@ const program = async () => {
 
       if (event.table == 'hot_money'){
         // console.log(event);
-        console.log(event.affectedRows);
+        // console.log(event.affectedRows);
         emitAnEvent("update_hot_money",event.affectedRows)
       }
 
