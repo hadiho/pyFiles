@@ -167,7 +167,7 @@ def lastChanges():
             data = json.loads(resp.text, strict=False)
             return data
     except:
-        logging.exception("Error" + resp.text)
+        logging.exception("Error")
 
     return None
 
@@ -907,7 +907,7 @@ logging.basicConfig(filename="log.txt",
 
 logger = logging.getLogger('urbanGUI')
 
-schedule.every().day.at("07:00").do(downloadCsvs)
+schedule.every().day.at("07:30").do(downloadCsvs)
 
 schedule.every().saturday.at("08:30").do(clearHotMoney)
 schedule.every().sunday.at("08:30").do(clearHotMoney)
