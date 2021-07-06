@@ -836,9 +836,9 @@ def startServer():
         print("I'm working...")
         rt = RepeatedTimer(15, shakhesBource)
         rt = RepeatedTimer(35, detectVolume)
-        rt = RepeatedTimer(1000, car)
-        rt = RepeatedTimer(800, currency)
-        rt = RepeatedTimer(700, digital_currency)
+        rt = RepeatedTimer(2000, car)
+        rt = RepeatedTimer(2500, currency)
+        rt = RepeatedTimer(3000, digital_currency)
         # rt = RepeatedTimer(500, timeVolume)
 
         try:
