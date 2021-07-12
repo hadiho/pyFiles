@@ -911,7 +911,7 @@ schedule.every().day.at("07:30").do(downloadCsvs)
 
 # schedule.every().saturday.at("08:30").do(clearHotMoney)
 # schedule.every().sunday.at("08:30").do(clearHotMoney)
-schedule.every().monday.at("20:05").do(clearHotMoney)
+schedule.every().monday.at("20:07").do(clearHotMoney)
 # schedule.every().tuesday.at("08:30").do(clearHotMoney)
 # schedule.every().wednesday.at("08:30").do(clearHotMoney)
 #
