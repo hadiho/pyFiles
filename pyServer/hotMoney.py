@@ -909,21 +909,22 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().day.at("07:30").do(downloadCsvs)
 
-# schedule.every().saturday.at("08:30").do(clearHotMoney)
-# schedule.every().sunday.at("08:30").do(clearHotMoney)
-schedule.every().monday.at("20:07").do(clearHotMoney)
-# schedule.every().tuesday.at("08:30").do(clearHotMoney)
-# schedule.every().wednesday.at("08:30").do(clearHotMoney)
-#
-# schedule.every().saturday.at("09:00").do(startServer)
-# schedule.every().sunday.at("09:00").do(startServer)
-# schedule.every().monday.at("09:00").do(startServer)
-# schedule.every().tuesday.at("09:00").do(startServer)
-# schedule.every().wednesday.at("09:00").do(startServer)
+schedule.every().saturday.at("08:31").do(clearHotMoney)
+schedule.every().sunday.at("08:32").do(clearHotMoney)
+schedule.every().monday.at("08:33").do(clearHotMoney)
+schedule.every().tuesday.at("08:34").do(clearHotMoney)
+schedule.every().wednesday.at("08:35").do(clearHotMoney)
+
+schedule.every().saturday.at("09:00").do(startServer)
+schedule.every().sunday.at("09:00").do(startServer)
+schedule.every().monday.at("09:00").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().wednesday.at("09:00").do(startServer)
+
 
 while True:
     schedule.run_pending()
-    time.sleep(30)
+    time.sleep(5)
 
 # clearHotMoney()
 # downloadCsvs()
