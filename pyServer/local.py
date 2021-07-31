@@ -150,6 +150,25 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                     connection.commit()
 
 
+def clearHotMoney():
+    connection = pymysql.connect(host='localhost',  # 194.5.175.58   localhost
+                                 user='root',
+                                 password='root',  # Hadi2150008140@$&!   root
+                                 database='price',
+                                 port=3306,
+                                 cursorclass=pymysql.cursors.DictCursor)
+    with connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) FROM price.hot_money"
+            cursor.execute(sql, args=None)
+        connection.commit()
+        size = cursor.rowcount
+        if size > 1:
+            populateDatabase('price', 'hot_money', "", 4, True)
+            sleep(30)
+            clearHotMoney()
+
+
 def is_non_zero_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
 
@@ -841,8 +860,6 @@ def startServer():
         logging.exception("message")
 
 
-def clearHotMoney():
-    populateDatabase('price', 'hot_money', "", 4, True)
 
 
 def downloadCsvs():
@@ -910,7 +927,8 @@ logger = logging.getLogger('urbanGUI')
 #     time.sleep(30)
 
 
-downloadOneCsv('شپارس')
+clearHotMoney()
+# downloadOneCsv('شپارس')
 # startServer()
 # downloadCsvs()
 # clear()

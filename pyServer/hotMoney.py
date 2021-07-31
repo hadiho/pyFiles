@@ -150,6 +150,25 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
                     connection.commit()
 
 
+def clearHotMoney():
+    connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
+                                 user='root',
+                                 password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
+                                 database='price',
+                                 port=3306,
+                                 cursorclass=pymysql.cursors.DictCursor)
+    with connection:
+        with connection.cursor() as cursor:
+            sql = "SELECT COUNT(*) FROM price.hot_money"
+            cursor.execute(sql, args=None)
+        connection.commit()
+        size = cursor.rowcount
+        if size > 1:
+            populateDatabase('price', 'hot_money', "", 4, True)
+            sleep(30)
+            clearHotMoney()
+
+
 def is_non_zero_file(fpath):
     return os.path.isfile(fpath) and os.path.getsize(fpath) > 0
 
@@ -463,10 +482,10 @@ def max_Volume_buy():
                 df = df.fillna(0).astype({"corporate_sell_vol": int})
                 df = df.fillna(0).astype({"individual_sell_vol": int})
 
-
                 if not ticker.empty and ticker.size > 2:
-                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == df['date'].iloc[
-                        -1]:
+                    if ticker.iloc[-1].close is not None and df['individual_buy_vol'].size > 1 and today == \
+                            df['date'].iloc[
+                                -1]:
                         maxNow = int(df['individual_buy_vol'].iloc[-1]) + int(df['corporate_buy_vol'].iloc[-1])
                         max10 = int(max(df['individual_buy_vol'][-10:-1] + df['corporate_buy_vol'][-10:-1]))
                         max20 = int(max(df['individual_buy_vol'][-20:-1] + df['corporate_buy_vol'][-20:-1]))
@@ -834,8 +853,8 @@ def timeVolume():
 def startServer():
     try:
         print("I'm working...")
-        rt = RepeatedTimer(15, shakhesBource)
-        rt = RepeatedTimer(35, detectVolume)
+        rt = RepeatedTimer(20, shakhesBource)
+        rt = RepeatedTimer(60, detectVolume)
         rt = RepeatedTimer(2000, car)
         rt = RepeatedTimer(2500, currency)
         rt = RepeatedTimer(3000, digital_currency)
@@ -847,10 +866,6 @@ def startServer():
             rt.stop()
     except ZeroDivisionError:
         logging.exception("message")
-
-
-def clearHotMoney():
-    populateDatabase('price', 'hot_money', "", 4, True)
 
 
 def downloadCsvs():
@@ -909,18 +924,17 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().day.at("07:30").do(downloadCsvs)
 
-schedule.every().saturday.at("08:31").do(clearHotMoney)
-schedule.every().sunday.at("08:32").do(clearHotMoney)
-schedule.every().monday.at("08:33").do(clearHotMoney)
-schedule.every().tuesday.at("08:34").do(clearHotMoney)
-schedule.every().wednesday.at("08:35").do(clearHotMoney)
+schedule.every().saturday.at("08:30").do(clearHotMoney)
+schedule.every().sunday.at("08:30").do(clearHotMoney)
+schedule.every().monday.at("08:30").do(clearHotMoney)
+schedule.every().tuesday.at("08:30").do(clearHotMoney)
+schedule.every().wednesday.at("08:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("10:40").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
-
 
 while True:
     schedule.run_pending()
