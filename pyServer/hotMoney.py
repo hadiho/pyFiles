@@ -164,7 +164,11 @@ def clearHotMoney():
         connection.commit()
         size = cursor.rowcount
         if size > 1:
-            populateDatabase('price', 'hot_money', "", 4, True)
+            with connection.cursor() as cursor:
+                sql = "DELETE FROM price.hot_money"
+                cursor.execute(sql, args=None)
+            connection.commit()
+            # populateDatabase('price', 'hot_money', "", 4, True)
             sleep(30)
             clearHotMoney()
 
