@@ -162,15 +162,24 @@ def clearHotMoney():
             sql = "SELECT COUNT(*) FROM price.hot_money"
             cursor.execute(sql, args=None)
         connection.commit()
+        connection.close()
         size = cursor.rowcount
         if size > 1:
-            with connection.cursor() as cursor:
-                sql = "DELETE FROM price.hot_money"
-                cursor.execute(sql, args=None)
-            connection.commit()
-            # populateDatabase('price', 'hot_money', "", 4, True)
-            sleep(30)
-            clearHotMoney()
+            connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
+                                         user='root',
+                                         password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
+                                         database='price',
+                                         port=3306,
+                                         cursorclass=pymysql.cursors.DictCursor)
+            with connection:
+                with connection.cursor() as cursor:
+                    sql = "DELETE FROM price.hot_money"
+                    cursor.execute(sql, args=None)
+                connection.commit()
+                connection.close()
+                # populateDatabase('price', 'hot_money', "", 4, True)
+                sleep(30)
+                clearHotMoney()
 
 
 def is_non_zero_file(fpath):
