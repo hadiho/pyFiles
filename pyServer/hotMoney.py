@@ -167,7 +167,7 @@ def clearHotMoney():
         # connection.close()
         size = cursor.rowcount
         print(size)
-        if size > 1:
+        if size <= 1:
             print("3")
             connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                          user='root',
@@ -945,13 +945,13 @@ schedule.every().day.at("07:30").do(downloadCsvs)
 schedule.every().saturday.at("08:30").do(clearHotMoney)
 schedule.every().sunday.at("08:30").do(clearHotMoney)
 schedule.every().monday.at("08:30").do(clearHotMoney)
-schedule.every().tuesday.at("18:14").do(clearHotMoney)
+schedule.every().tuesday.at("18:20").do(clearHotMoney)
 schedule.every().wednesday.at("08:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("10:05").do(startServer)
+schedule.every().tuesday.at("09:00").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
 
 while True:
