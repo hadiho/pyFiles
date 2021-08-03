@@ -940,7 +940,7 @@ schedule.every().day.at("07:30").do(downloadCsvs)
 schedule.every().saturday.at("08:30").do(clearHotMoney)
 schedule.every().sunday.at("08:30").do(clearHotMoney)
 schedule.every().monday.at("08:30").do(clearHotMoney)
-schedule.every().tuesday.at("08:30").do(clearHotMoney)
+schedule.every().tuesday.at("17:48").do(clearHotMoney)
 schedule.every().wednesday.at("08:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
