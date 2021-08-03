@@ -162,7 +162,7 @@ def clearHotMoney():
             sql = "SELECT COUNT(*) FROM price.hot_money"
             cursor.execute(sql, args=None)
         connection.commit()
-        connection.close()
+        # connection.close()
         size = cursor.rowcount
         if size > 1:
             connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
@@ -176,7 +176,7 @@ def clearHotMoney():
                     sql = "DELETE FROM price.hot_money"
                     cursor.execute(sql, args=None)
                 connection.commit()
-                connection.close()
+                # connection.close()
                 # populateDatabase('price', 'hot_money', "", 4, True)
                 sleep(30)
                 clearHotMoney()
