@@ -167,7 +167,7 @@ def clearHotMoney():
         # connection.close()
         size = cursor.rowcount
         print(size)
-        if size == 1:
+        if size > 0:
             print("3")
             connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                          user='root',
