@@ -929,7 +929,7 @@ def clear():
             new_file = os.path.join("client_types_data/", renameSymbol(name))
             os.rename(old_file, new_file)
 
-
+print("0")
 logging.basicConfig(filename="log.txt",
                     filemode='a',
                     format='%(levelname)s: %(message)s',
@@ -943,7 +943,7 @@ schedule.every().day.at("07:30").do(downloadCsvs)
 schedule.every().saturday.at("08:30").do(clearHotMoney)
 schedule.every().sunday.at("08:30").do(clearHotMoney)
 schedule.every().monday.at("08:30").do(clearHotMoney)
-schedule.every().tuesday.at("18:00").do(clearHotMoney)
+schedule.every().tuesday.at("18:05").do(clearHotMoney)
 schedule.every().wednesday.at("08:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
