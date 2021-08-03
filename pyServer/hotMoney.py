@@ -164,9 +164,11 @@ def clearHotMoney():
             cursor.execute(sql, args=None)
         connection.commit()
         print("2")
-        # connection.close()
+        connection.close()
         size = cursor.rowcount
+        print(size)
         if size > 1:
+            print("3")
             connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                          user='root',
                                          password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
@@ -178,8 +180,8 @@ def clearHotMoney():
                     sql = "DELETE FROM price.hot_money"
                     cursor.execute(sql, args=None)
                 connection.commit()
-                print("3")
-                # connection.close()
+                print("4")
+                connection.close()
                 # populateDatabase('price', 'hot_money', "", 4, True)
                 sleep(30)
                 clearHotMoney()
@@ -943,7 +945,7 @@ schedule.every().day.at("07:30").do(downloadCsvs)
 schedule.every().saturday.at("08:30").do(clearHotMoney)
 schedule.every().sunday.at("08:30").do(clearHotMoney)
 schedule.every().monday.at("08:30").do(clearHotMoney)
-schedule.every().tuesday.at("18:05").do(clearHotMoney)
+schedule.every().tuesday.at("18:10").do(clearHotMoney)
 schedule.every().wednesday.at("08:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
