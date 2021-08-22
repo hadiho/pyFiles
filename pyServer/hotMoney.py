@@ -151,7 +151,6 @@ def populateDatabase(dbname, tbname, table_list, flag, clear):
 
 
 def clearHotMoney():
-    print("1")
     connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                  user='root',
                                  password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
@@ -163,12 +162,8 @@ def clearHotMoney():
             sql = "SELECT COUNT(*) FROM price.hot_money"
             cursor.execute(sql, args=None)
         connection.commit()
-        print("2")
-        # connection.close()
         size = cursor.rowcount
-        print(size)
         if size > 0:
-            print("3")
             connection = pymysql.connect(host='194.5.175.58',  # 194.5.175.58   localhost
                                          user='root',
                                          password='Hadi2150008140@$&!',  # Hadi2150008140@$&!   root
@@ -180,11 +175,6 @@ def clearHotMoney():
                     sql = "DELETE FROM price.hot_money"
                     cursor.execute(sql, args=None)
                 connection.commit()
-                print("4")
-                # connection.close()
-                # populateDatabase('price', 'hot_money', "", 4, True)
-                # sleep(30)
-                # clearHotMoney()
 
 
 def is_non_zero_file(fpath):
@@ -931,6 +921,7 @@ def clear():
             new_file = os.path.join("client_types_data/", renameSymbol(name))
             os.rename(old_file, new_file)
 
+
 print("0")
 logging.basicConfig(filename="log.txt",
                     filemode='a',
@@ -942,11 +933,11 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().day.at("07:30").do(downloadCsvs)
 
-schedule.every().saturday.at("00:30").do(clearHotMoney)
-schedule.every().sunday.at("00:30").do(clearHotMoney)
-schedule.every().monday.at("00:30").do(clearHotMoney)
-schedule.every().tuesday.at("00:30").do(clearHotMoney)
-schedule.every().wednesday.at("00:30").do(clearHotMoney)
+schedule.every().saturday.at("23:50").do(clearHotMoney)
+schedule.every().sunday.at("23:50").do(clearHotMoney)
+schedule.every().monday.at("23:50").do(clearHotMoney)
+schedule.every().tuesday.at("23:50").do(clearHotMoney)
+schedule.every().wednesday.at("23:50").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
