@@ -942,11 +942,11 @@ logger = logging.getLogger('urbanGUI')
 
 schedule.every().day.at("07:30").do(downloadCsvs)
 
-schedule.every().saturday.at("24:00").do(clearHotMoney)
-schedule.every().sunday.at("24:00").do(clearHotMoney)
-schedule.every().monday.at("24:00").do(clearHotMoney)
-schedule.every().tuesday.at("24:00").do(clearHotMoney)
-schedule.every().wednesday.at("24:00").do(clearHotMoney)
+schedule.every().saturday.at("00:30").do(clearHotMoney)
+schedule.every().sunday.at("00:30").do(clearHotMoney)
+schedule.every().monday.at("00:30").do(clearHotMoney)
+schedule.every().tuesday.at("00:30").do(clearHotMoney)
+schedule.every().wednesday.at("00:30").do(clearHotMoney)
 
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
