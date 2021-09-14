@@ -942,7 +942,7 @@ schedule.every().wednesday.at("23:50").do(clearHotMoney)
 schedule.every().saturday.at("09:00").do(startServer)
 schedule.every().sunday.at("09:00").do(startServer)
 schedule.every().monday.at("09:00").do(startServer)
-schedule.every().tuesday.at("09:00").do(startServer)
+schedule.every().tuesday.at("10:10").do(startServer)
 schedule.every().wednesday.at("09:00").do(startServer)
 
 while True:
